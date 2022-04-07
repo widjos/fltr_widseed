@@ -45,9 +45,7 @@ doc/api/
 .env*
 
 #Widows
-.windows/flutter
-.windows/Runner
-.windows/CMakeLists.txt
+.windows/*
 
 # Web related
 .web/
