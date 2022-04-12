@@ -38,6 +38,12 @@ dependencies:
   bloc: ^8.0.3
   bloc_provider: ^0.8.0
   flutter_bloc: ^8.0.1
+  firebase_crashlytics: ^2.6.1
+  firebase_messaging: ^11.2.12
+  firebase_remote_config: ^2.0.3
+  firebase_core: ^1.14.0
+  shared_preferences:
+  provider:
 
 
 dev_dependencies:

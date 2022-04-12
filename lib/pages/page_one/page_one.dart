@@ -1,42 +1,59 @@
 import 'dart:developer';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test/bloc/basic_bloc/basic_bloc.dart';
 import 'package:test/pages/page_two/page_two.dart';
+import 'package:test/prefs/theme_provider.dart';
 import 'package:test/widgets/gradient_back.dart';
 import 'package:test/widgets/text_input.dart';
 import 'package:test/widgets/button_green.dart';
 
+// ignore: must_be_immutable
 class PageOne extends StatelessWidget {
-  final String _nombreUser = 'wid';
-  final String _passUser = '12345';
   final _textControllerUserName = TextEditingController();
   final _textControllerPassword = TextEditingController();
+  bool theme;
 
-  PageOne({Key? key}) : super(key: key);
+  PageOne({Key? key, required this.theme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+
+    return /*Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 88, 204, 5),
           title: const Text('Tarea 1'),
         ),
-        body: BlocProvider(
+        body: */BlocProvider(
             create: (BuildContext context) => BasicBloc(),
             child: BlocListener<BasicBloc, BasicState>(
               listener: (context, state) {
                 switch (state.runtimeType) {
                   case AppStarted:
                     break;
-                  case PageChanged:
-                    final estado = state as PageChanged;
+                  case LoginDone:
+                    final estado = state as LoginDone;
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (ctx) => PageTwo(tittle: estado.title)));
+                            builder: (ctx) => PageTwo(tittle:estado.email, theme: theme)));
                     break;
+
+                  case WrongCredentials:
+                    final estado = state as WrongCredentials;
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("usuario o password incorrecto")));
+                    break;
+
+                  case EmailNotValid:
+                    final estado = state as EmailNotValid;
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Ingrese un correo valido")));
+                    break;
+                      
+
                 }
               },
               child: BlocBuilder<BasicBloc, BasicState>(
@@ -70,7 +87,8 @@ class PageOne extends StatelessWidget {
                                     hintText: 'Nombre de Usuario',
                                     inputType: null,
                                     controller: _textControllerUserName,
-                                    isPassword: false),
+                                    isPassword: false
+                                    ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(bottom: 20.0),
@@ -85,23 +103,32 @@ class PageOne extends StatelessWidget {
                               Container(
                                   width: 70,
                                   child: ButtonGreen('Ingresar', () {
-                                    if (_nombreUser ==
-                                            _textControllerUserName.text &&
-                                        _passUser ==
-                                            _textControllerPassword.text) {
-                                      log("Log in ");
-                                      BlocProvider.of<BasicBloc>(context)
-                                          .add(ButtonPressed());
-                                    } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("usuario o password incorrecto")));
-                                    }
-                                  }, 300.0, 50.0))
+
+                                      if(_textControllerUserName.text.isNotEmpty && _textControllerPassword.text.isNotEmpty){
+                                        
+                                        if(EmailValid(_textControllerUserName.text)){
+                                          BlocProvider.of<BasicBloc>(context)
+                                          .add(LoginBegin(email: _textControllerUserName.text, pass: _textControllerPassword.text));
+                                   
+                                        }else{
+                                           BlocProvider.of<BasicBloc>(context)
+                                          .add(EmailInvalid());
+                                        }
+                                        
+                                      }
+                                      
+                                  }, 300.0, 50.0)),
+                              
                             ],
                           ))
                     ],
                   );
                 },
               ),
-            )));
+            ));//);
+  }
+
+  bool EmailValid(String email) {
+    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
   }
 }

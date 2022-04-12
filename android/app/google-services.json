@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "846775124051",
+    "project_id": "seeduni-f62eb",
+    "storage_bucket": "seeduni-f62eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846775124051:android:abcbe8857b6b27dce686a6",
+        "android_client_info": {
+          "package_name": "com.example.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846775124051-m4qes921qpaf5c7m7dha6l4354j9m7kp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.test",
+            "certificate_hash": "a99a4815c8ff93dd54a7974bb02a7287691f2cd1"
+          }
+        },
+        {
+          "client_id": "846775124051-l9e1l0babgraaejf49tpqjen4m14ao2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGcCGN6qcLMr1dWOcLaEZBH7pzswlu6fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846775124051-l9e1l0babgraaejf49tpqjen4m14ao2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
