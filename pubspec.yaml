@@ -44,6 +44,7 @@ dependencies:
   firebase_core: ^1.14.0
   shared_preferences:
   provider:
+  http: ^0.13.4
 
 
 dev_dependencies:

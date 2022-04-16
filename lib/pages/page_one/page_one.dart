@@ -1,9 +1,9 @@
-import 'dart:developer';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test/bloc/basic_bloc/basic_bloc.dart';
+import 'package:test/pages/clients/clients.dart';
 import 'package:test/pages/page_two/page_two.dart';
 import 'package:test/prefs/theme_provider.dart';
 import 'package:test/widgets/gradient_back.dart';
@@ -52,7 +52,8 @@ class PageOne extends StatelessWidget {
                     final estado = state as EmailNotValid;
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Ingrese un correo valido")));
                     break;
-                      
+
+                    
 
                 }
               },
@@ -106,7 +107,7 @@ class PageOne extends StatelessWidget {
 
                                       if(_textControllerUserName.text.isNotEmpty && _textControllerPassword.text.isNotEmpty){
                                         
-                                        if(EmailValid(_textControllerUserName.text)){
+                                        if(emailValid(_textControllerUserName.text)){
                                           BlocProvider.of<BasicBloc>(context)
                                           .add(LoginBegin(email: _textControllerUserName.text, pass: _textControllerPassword.text));
                                    
@@ -128,7 +129,7 @@ class PageOne extends StatelessWidget {
             ));//);
   }
 
-  bool EmailValid(String email) {
+  bool emailValid(String email) {
     return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
   }
 }

@@ -23,3 +23,9 @@ class LoginDone extends BasicState{
 class WrongCredentials extends BasicState{}
 
 class EmailNotValid extends BasicState{}
+
+class ClientsPage extends BasicState {}
+
+class InsurancePage extends BasicState {}
+
+class SinisterPage extends BasicState{}
