@@ -56,6 +56,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _initializeRC() async {
     FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
     remoteConfig.setDefaults({'parametro': 5});
+     await remoteConfig.setConfigSettings(RemoteConfigSettings(fetchTimeout: Duration(seconds: 10), minimumFetchInterval: Duration.zero));
      await remoteConfig.fetchAndActivate();
     print('------------------------> ' + remoteConfig.getString('parametro'));
   }
