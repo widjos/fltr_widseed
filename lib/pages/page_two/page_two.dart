@@ -4,10 +4,10 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test/bloc/basic_bloc/basic_bloc.dart';
-import 'package:test/pages/clients/clients.dart';
-import 'package:test/pages/insurance/insurance.dart';
+import 'package:test/pages/clients/page_clients.dart';
+import 'package:test/pages/insurance/page_insurance.dart';
 import 'package:test/pages/page_two/card_button.dart';
-import 'package:test/pages/sinister/sinister.dart';
+import 'package:test/pages/sinister/page_sinister.dart';
 
 class PageTwo extends StatelessWidget {
   final String tittle;
@@ -27,7 +27,7 @@ class PageTwo extends StatelessWidget {
             case ClientsPage:
               final estado = state as ClientsPage;
               Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) => const Clients()));
+                  MaterialPageRoute(builder: (ctx) => const PageClients()));
               break;
             case SinisterPage:
               Navigator.push(context,
