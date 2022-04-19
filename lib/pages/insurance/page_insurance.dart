@@ -30,6 +30,7 @@ class PageInsurance extends StatelessWidget {
                 if(snapshot.hasData){
                   final InsuranceList seguroList = snapshot.requireData as InsuranceList;
                     return PageView.builder(
+                      itemCount: seguroList.seguros.length,
                       itemBuilder: (BuildContext context, int index){
                         return ListView(
                           shrinkWrap: true,

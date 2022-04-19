@@ -45,6 +45,9 @@ dependencies:
   shared_preferences:
   provider:
   http: ^0.13.4
+  firebase_storage: ^10.2.12
+  firebase_database: ^9.0.11
+  firebase_database_web: ^0.2.0+10
 
 
 dev_dependencies:

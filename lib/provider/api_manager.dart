@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:test/model/client/client.dart';
 import 'package:test/model/client/client_list.dart';
 import 'package:test/model/insurance/insurance_list.dart';
 import 'package:test/model/model.dart';
+import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/util/app_type.dart';
 import 'package:http/http.dart' as http;
 import 'package:test/util/model_type.dart';
@@ -21,7 +24,16 @@ class ApiManager {
     Map<String, dynamic>? bodyParams,
     Map<String, dynamic>? uriParams
   }) async {
-    final uri = Uri.http(baseUrl, pathUrl);
+    dynamic uri;
+    if(bodyParams!= null){
+      uri = Uri.http(baseUrl, pathUrl,bodyParams);
+    }else if(uriParams != null){
+      uri = Uri.http(baseUrl, pathUrl,uriParams);
+    }
+    else{
+      uri = Uri.http(baseUrl,pathUrl);
+    }
+      
 
     late http.Response response;
     switch(type){
@@ -38,20 +50,32 @@ class ApiManager {
         response = await http.put(uri);     
     }
 
-    if(response.statusCode == 200) {
+    if(response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
       final body  = json.decode(response.body);
       switch(modelType){
         case ModelType.CLIENT:
-          return ClientList.fromService(body);
+          if (uriParams != null){
+            return Client.fromService(body);
+          }else{
+            return ClientList.fromService(body);
+          } 
+          
+         
         case ModelType.INSURANSE:
           return InsuranceList.fromService(body);
          case ModelType.SINISTER:
-          return null; 
+          return SinisterList.fromService(body); 
       }
       
       
     }else{
+      FirebaseCrashlytics.instance.recordError(
+        response.statusCode,
+        StackTrace.current,
+        reason: 'Error en una peticion',
+        );
       log("Error --->  no se obtuvo data");
+
     }
 
     return null;

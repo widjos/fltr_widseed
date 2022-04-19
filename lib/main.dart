@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    
     return ChangeNotifierProvider(
       create: (_) => themeProvider,
       child: Consumer<ThemeProvider>(
@@ -104,6 +106,7 @@ class _MyAppState extends State<MyApp> {
                       child: Switch(
                     value: switchValue,
                     onChanged: (val){
+                       
                       themeProvider.darkTheme = !themeProvider.darkTheme;
                       setState(() {
                         switchValue = val;
