@@ -21,12 +21,12 @@ class ApiManager {
     required String pathUrl,
     required HttpType type,
     required ModelType modelType,
-    Map<String, dynamic>? bodyParams,
+    String? bodyParams,
     Map<String, dynamic>? uriParams
   }) async {
     dynamic uri;
     if(bodyParams!= null){
-      uri = Uri.http(baseUrl, pathUrl,bodyParams);
+      uri = Uri.http(baseUrl, pathUrl);
     }else if(uriParams != null){
       uri = Uri.http(baseUrl, pathUrl,uriParams);
     }
@@ -44,17 +44,17 @@ class ApiManager {
         response = await http.delete(uri);
       break;
       case HttpType.POST:
-        response = await http.post(uri);
+        response = await http.post(uri,headers: {"Content-Type": "application/json"} ,body: bodyParams);
       break; 
       case HttpType.PUT:
         response = await http.put(uri);     
     }
 
-    if(response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
+    if((response.statusCode == 200 || response.statusCode== 202 ) && response.bodyBytes.isNotEmpty) {
       final body  = json.decode(response.body);
       switch(modelType){
         case ModelType.CLIENT:
-          if (uriParams != null){
+          if (uriParams != null || bodyParams != null){
             return Client.fromService(body);
           }else{
             return ClientList.fromService(body);

@@ -31,7 +31,12 @@ class _MyAppState extends State<MyApp> {
   ThemeProvider themeProvider = ThemeProvider();
 
   void getCurrentTheme() async {
-    themeProvider.darkTheme = await themeProvider.preference.getTheme();
+    DatabaseReference refInit = FirebaseDatabase.instance.ref('preferences/theme');
+    refInit.onValue.listen((DatabaseEvent event) {
+       final data  = event.snapshot.value;
+       themeProvider.darkTheme = data as bool; 
+    });
+    //themeProvider.darkTheme = await themeProvider.preference.getTheme();
   }
   
   late Future<void> _firebase;
@@ -105,9 +110,13 @@ class _MyAppState extends State<MyApp> {
                     Container(
                       child: Switch(
                     value: switchValue,
-                    onChanged: (val){
+                    onChanged: (val) async{
+                      DatabaseReference ref = FirebaseDatabase.instance.ref('preferences');
                        
                       themeProvider.darkTheme = !themeProvider.darkTheme;
+                      await ref.update({
+                        'theme': themeProvider.darkTheme
+                      });
                       setState(() {
                         switchValue = val;
                       });

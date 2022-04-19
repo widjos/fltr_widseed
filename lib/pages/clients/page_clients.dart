@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:test/model/client/client_list.dart';
+import 'package:test/pages/clients/form_cliente.dart';
 import 'package:test/provider/api_manager.dart';
 import 'package:test/util/app_type.dart';
 import 'package:test/util/model_type.dart';
@@ -21,7 +22,11 @@ class PageClients extends StatelessWidget {
               const Text('Clientes'),
               const Spacer(),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(context: context, builder: (BuildContext context){
+                      return FormClient();
+                    });
+                  },
                   icon: const Icon(
                     Icons.add_circle,
                     color: Colors.white,
