@@ -8,12 +8,14 @@ import 'package:test/util/model_type.dart';
 import 'package:test/widgets/api_item.dart';
 
 class PageClients extends StatelessWidget {
-  const PageClients({Key? key}) : super(key: key);
+  bool theme;
+  PageClients({Key? key, required this.theme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: theme ? Colors.black :  Colors.green[700],
           title: Row(
             children: [
               const Text('Clientes'),
@@ -56,8 +58,8 @@ class PageClients extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index){
                       return ListView(
                           shrinkWrap: true,
-                      children: [
-                        Column(
+                          children: [
+                            Column(
                             children: [
                               ApiItem(maxHeight: 50, fontSize: 20, name: 'Cliente Id', value: clientList.clientes[index].dniCl.toString()),
                               ApiItem(maxHeight: 50, fontSize: 20, name: 'Nombre', value: clientList.clientes[index].nombreCl),

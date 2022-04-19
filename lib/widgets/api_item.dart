@@ -26,17 +26,15 @@ class ApiItem extends StatelessWidget {
               width: 158,
               child: Text(
                 name,
-                style:
-                    TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.bodyText1//TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, style: Theme.of(context).textTheme),
+                
               ),
             ),
             Container(
               padding: const EdgeInsets.only(top: 10, left: 25, bottom: 15),
               child: Text(
                 value,
-                style: TextStyle(
-                  fontSize: fontSize,
-                ),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
           ],

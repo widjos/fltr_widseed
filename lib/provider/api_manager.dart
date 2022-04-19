@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:test/model/client/client_list.dart';
+import 'package:test/model/insurance/insurance_list.dart';
 import 'package:test/model/model.dart';
 import 'package:test/util/app_type.dart';
 import 'package:http/http.dart' as http;
@@ -43,7 +44,7 @@ class ApiManager {
         case ModelType.CLIENT:
           return ClientList.fromService(body);
         case ModelType.INSURANSE:
-          return null;
+          return InsuranceList.fromService(body);
          case ModelType.SINISTER:
           return null; 
       }

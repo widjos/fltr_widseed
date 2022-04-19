@@ -1,4 +1,3 @@
-import 'package:test/model/model.dart';
 
 class Client {
 

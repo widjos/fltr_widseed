@@ -38,6 +38,16 @@ class LoginBegin extends BasicEvent {
   List<Object?> get props => [email, pass];
 }
 
+class LoginSpring extends BasicEvent {
+  final String email;
+  final String pass;
+
+  LoginSpring({required this.email, required this.pass});
+
+  @override
+  List<Object?> get props => [email, pass];
+}
+
 class EmailInvalid extends BasicEvent {
   @override
   // TODO: implement props

@@ -27,7 +27,7 @@ class PageTwo extends StatelessWidget {
             case ClientsPage:
               final estado = state as ClientsPage;
               Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) => const PageClients()));
+                  MaterialPageRoute(builder: (ctx) =>  PageClients(theme: theme)));
               break;
             case SinisterPage:
               Navigator.push(context,
@@ -36,7 +36,7 @@ class PageTwo extends StatelessWidget {
 
             case InsurancePage:
               Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) => const Insurance()));
+                  MaterialPageRoute(builder: (ctx) => const PageInsurance()));
               break;
           }
         },
@@ -44,7 +44,7 @@ class PageTwo extends StatelessWidget {
           builder: (context, state) {
             return Scaffold(
                 appBar: AppBar(
-                  backgroundColor: theme ? Colors.green[700] : Colors.black,
+                  backgroundColor: theme ?  Colors.black : Colors.green[700] ,
                   title: const Text('Bienvenido'),
                 ),
                 body: ListView(
