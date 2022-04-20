@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:test/model/client/client.dart';
 import 'package:test/model/client/client_list.dart';
 import 'package:test/model/insurance/insurance_list.dart';
@@ -10,6 +11,7 @@ import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/util/app_type.dart';
 import 'package:http/http.dart' as http;
 import 'package:test/util/model_type.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ApiManager {
   ApiManager._privateContructor();
@@ -25,6 +27,10 @@ class ApiManager {
     Map<String, dynamic>? uriParams
   }) async {
     dynamic uri;
+     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+     uploadPosition(position);
+     print("posicion ------ >  ${position.latitude} , ${position.longitude}");
+
     if(bodyParams!= null){
       uri = Uri.http(baseUrl, pathUrl);
     }else if(uriParams != null){
@@ -50,6 +56,7 @@ class ApiManager {
         response = await http.put(uri);     
     }
 
+  
     if((response.statusCode == 200 || response.statusCode== 202 ) && response.bodyBytes.isNotEmpty) {
       final body  = json.decode(response.body);
       switch(modelType){
@@ -80,4 +87,12 @@ class ApiManager {
 
     return null;
   }
+
+  void uploadPosition(Position pos) async {
+    final  postImageRef = 
+    FirebaseStorage.instance.ref().child("localitation");
+    final uploadTask =  await postImageRef.child('localitation/latitude').putString(pos.latitude.toString());
+
+  }
+
 }

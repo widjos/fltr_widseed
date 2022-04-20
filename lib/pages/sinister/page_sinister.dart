@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:test/model/sinister/sinister_list.dart';
+import 'package:test/pages/sinister/form_delete_sinister.dart';
 import 'package:test/provider/api_manager.dart';
 import 'package:test/util/app_type.dart';
 import 'package:test/util/model_type.dart';
 import 'package:test/widgets/api_item.dart';
+import 'package:test/widgets/button_icon.dart';
 
 class PageSinister extends StatelessWidget {
   const PageSinister({ Key? key }) : super(key: key);
@@ -44,8 +46,17 @@ class PageSinister extends StatelessWidget {
                               ApiItem(maxHeight: 50, fontSize: 20, name: 'Indenmizacion', value: siniestroList.siniestros[index].indenmizacion),
                               ApiItem(maxHeight: 50, fontSize: 20, name: 'Numero Poliza', value: siniestroList.siniestros[index].numeroPoliza.toString()),
                               ApiItem(maxHeight: 50, fontSize: 20, name: 'Perito', value: siniestroList.siniestros[index].dniPerito.toString()),
+                              
                             ],
-                          )
+                            
+                          ),
+                          ButtonIcon(true, Icons.delete, 20, Colors.amber, (){
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context){
+                                    return FormDeleteSinister(idSiniestro: siniestroList.siniestros[index].idSiniestro);
+                                  });
+                              })
                         ],
                       );
                     }

@@ -35,7 +35,7 @@ class PageOne extends StatelessWidget {
                     break;
                   case LoginDone:
                     final estado = state as LoginDone;
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (ctx) => PageTwo(tittle:estado.email, theme: theme)));
