@@ -21,6 +21,8 @@ class FormClient extends StatefulWidget {
   TextEditingController telefonoController = TextEditingController();
   TextEditingController observController = TextEditingController();
 
+
+
   FormClient({ Key? key }) : super(key: key);
 
   @override
@@ -30,6 +32,7 @@ class FormClient extends StatefulWidget {
 class _FormClientState extends State<FormClient> {
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     return AlertDialog(
       title: const  Text('Nuevo Cliente'),
       content: Container(
@@ -38,108 +41,156 @@ class _FormClientState extends State<FormClient> {
         child: ListView(
         children: [
           TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
+            decoration: const  InputDecoration(
+              border:   UnderlineInputBorder(), 
               label:  Text("Nombre")
             ),
-            controller: widget.nombreController
+            controller: widget.nombreController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su nombre' : null; 
+            },
           ),
           TextFormField(
             decoration: const InputDecoration(
               border:  UnderlineInputBorder(), 
-              label:  Text("password")
+              label:  Text("password"),
+              ),
+            controller: widget.passController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su password' : null; 
+            },
+          ),
+          TextFormField(
+            decoration: const  InputDecoration(
+              border:  UnderlineInputBorder(), 
+              label:   Text("email")
             ),
-            controller: widget.passController
+            controller: widget.emailController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su email' : null; 
+            },
+          ),
+          TextFormField(
+            decoration: const  InputDecoration(
+              border:   UnderlineInputBorder(), 
+              label:   Text("apellido1"),
+              ),
+            controller: widget.apellido1Controller,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su apellido1' : null; 
+            },
+          ),
+          TextFormField(
+            decoration:  const InputDecoration(
+              border:   UnderlineInputBorder(), 
+              label:   Text("apellido2"),
+            ),
+            controller: widget.apellido2Controller,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su apellido1' : null; 
+            },
           ),
           TextFormField(
             decoration: const InputDecoration(
               border:  UnderlineInputBorder(), 
-              label:  Text("email")
+              label:   Text("clase Via")
             ),
-            controller: widget.emailController
+            controller: widget.claseViaController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su clasevia' : null; 
+            },
+          ),
+          TextFormField(
+            decoration: const  InputDecoration(
+              border:  UnderlineInputBorder(), 
+              label:   Text("nombre Via")
+            ),
+            controller: widget.nombreViaController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su nombrevia' : null; 
+            },
           ),
           TextFormField(
             decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("apellido1")
-            ),
-            controller: widget.apellido1Controller
+              border:   UnderlineInputBorder(), 
+              label:   Text("numero VIa"),
+              ),
+            controller: widget.numeroViaController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su numerovia' : null; 
+            },
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("apellido2")
-            ),
-            controller: widget.apellido2Controller
+            decoration:  const InputDecoration(
+              border:   UnderlineInputBorder(), 
+              label:   Text("Cod Postal"),
+              ),
+            controller: widget.condPostalController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su codPostal' : null; 
+            },
           ),
           TextFormField(
-            decoration: const InputDecoration(
+            decoration:  const InputDecoration(
               border:  UnderlineInputBorder(), 
-              label:  Text("clase Via")
+              label:   Text("Ciudad")
             ),
-            controller: widget.claseViaController
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("nombre Via")
-            ),
-            controller: widget.nombreViaController
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("numero VIa")
-            ),
-            controller: widget.numeroViaController
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("Cod Postal")
-            ),
-            controller: widget.condPostalController
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("Ciudad")
-            ),
-            controller: widget.ciudadController
+            controller: widget.ciudadController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su ciudad' : null; 
+            },
           ), 
           TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("telefono")
+            decoration: const  InputDecoration(
+              border:   UnderlineInputBorder(), 
+              label:   Text("telefono"),
             ),
-            controller: widget.telefonoController
+            controller: widget.telefonoController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su telefono' : null; 
+            },
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              border:  UnderlineInputBorder(), 
-              label:  Text("obsr")
+            decoration:  const InputDecoration(
+              border:   UnderlineInputBorder(), 
+              label:  Text("obsr"),
             ),
-            controller: widget.observController
+            controller: widget.observController,
+            validator: (value) {
+              value == null || value.isEmpty ? 
+              'ingrese su observa' : null; 
+            },
           ),
         ],
       ),
       ),
       actions: [
         TextButton(onPressed: (){
-          print("httpRequest");
+          
           var map = jsonEncode({
-                    "nombreCl": widget.nombreController.text,
-                    "password": widget.passController.text,
-                    "email" : widget.emailController.text,
-                    "apellido1": widget.apellido1Controller.text,
-                    "apellido2": widget.apellido2Controller.text,
-                    "claseVia": widget.claseViaController.text,
-                    "nombreVia": widget.nombreViaController.text,
-                    "numeroVia": widget.numeroViaController.text,
-                    "codPostal": widget.condPostalController.text,
-                    "ciudad": widget.ciudadController.text,
-                    "telefono": widget.telefonoController.text,
-                    "observaciones": widget.observController.text
+                    widget.nombreController.text,
+                    widget.passController.text,
+                    widget.emailController.text,
+                    widget.apellido1Controller.text,
+                    widget.apellido2Controller.text,
+                    widget.claseViaController.text,
+                    widget.nombreViaController.text,
+                    widget.numeroViaController.text,
+                    widget.condPostalController.text,
+                    widget.ciudadController.text,
+                    widget.telefonoController.text,
+                    widget.observController.text
               });
 
             log(map.toString());

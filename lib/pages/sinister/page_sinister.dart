@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/pages/sinister/form_delete_sinister.dart';
@@ -6,15 +7,36 @@ import 'package:test/util/app_type.dart';
 import 'package:test/util/model_type.dart';
 import 'package:test/widgets/api_item.dart';
 import 'package:test/widgets/button_icon.dart';
+import 'package:test/widgets/row_data.dart';
 
 class PageSinister extends StatelessWidget {
-  const PageSinister({ Key? key }) : super(key: key);
+
+ late SinisterList siniestroList;
+
+  PageSinister({ Key? key }) : super(key: key);
+
+  @override
+  void initState(){
+    refreshData();
+  }
+
+  Future refreshData() async {
+    ApiManager.shared.request(
+      baseUrl: "10.0.2.2:9595", 
+      pathUrl: "/siniestro/buscar", 
+      type: HttpType.GET, 
+      modelType: ModelType.SINISTER)
+        .then(( value) => siniestroList = value as SinisterList );
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Siniestro'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: FutureBuilder(
         future: ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/siniestro/buscar", type: HttpType.GET, modelType: ModelType.SINISTER),
@@ -30,36 +52,48 @@ class PageSinister extends StatelessWidget {
             case ConnectionState.done:
             case ConnectionState.active:
               if(snapshot.hasData){
-                final  SinisterList siniestroList = snapshot.requireData as SinisterList;
-                  return PageView.builder(
+                siniestroList = snapshot.requireData as SinisterList;
+                  return RefreshIndicator( 
+                    onRefresh: refreshData,
+                    child: ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      color: Theme.of(context).primaryColor,
+                    ),
                     itemCount: siniestroList.siniestros.length,
                     itemBuilder: (BuildContext context, int index){
-                      return ListView(
-                        shrinkWrap: true,
-                        children: [
+                      return 
                           Column(
                             children: [
-                              ApiItem(maxHeight: 50, fontSize: 20, name: 'Id Siniestro', value: siniestroList.siniestros[index].idSiniestro.toString()),
-                              ApiItem(maxHeight: 50, fontSize: 20, name: 'Fecha', value: siniestroList.siniestros[index].fechaSiniestro),
-                              ApiItem(maxHeight: 50, fontSize: 20, name: 'Causa', value: siniestroList.siniestros[index].causas),
-                              ApiItem(maxHeight: 50, fontSize: 20, name: 'Aceptado', value: siniestroList.siniestros[index].aceptado),
-                              ApiItem(maxHeight: 50, fontSize: 20, name: 'Indenmizacion', value: siniestroList.siniestros[index].indenmizacion),
-                              ApiItem(maxHeight: 50, fontSize: 20, name: 'Numero Poliza', value: siniestroList.siniestros[index].numeroPoliza.toString()),
-                              ApiItem(maxHeight: 50, fontSize: 20, name: 'Perito', value: siniestroList.siniestros[index].dniPerito.toString()),
-                              
-                            ],
-                            
-                          ),
-                          ButtonIcon(true, Icons.delete, 20, Colors.amber, (){
+                              RowData(idData1: 'Id:', valueData1: siniestroList.siniestros[index].idSiniestro.toString(), idData2: 'Fecha:', valueData2: siniestroList.siniestros[index].fechaSiniestro, myButton: 
+                              ButtonIcon(true, Icons.delete, 20, Colors.amber, (){
+
                                 showDialog(
                                   context: context, 
                                   builder: (BuildContext context){
                                     return FormDeleteSinister(idSiniestro: siniestroList.siniestros[index].idSiniestro);
                                   });
-                              })
-                        ],
-                      );
+                              }),)
+                              //ApiItem(maxHeight: 50, fontSize: 20, name: 'Id Siniestro', value: siniestroList.siniestros[index].idSiniestro.toString()),
+                              //ApiItem(maxHeight: 50, fontSize: 20, name: 'Fecha', value: siniestroList.siniestros[index].fechaSiniestro),
+                              //ApiItem(maxHeight: 50, fontSize: 20, name: 'Causa', value: siniestroList.siniestros[index].causas),
+                              //ApiItem(maxHeight: 50, fontSize: 20, name: 'Aceptado', value: siniestroList.siniestros[index].aceptado),
+                              //ApiItem(maxHeight: 50, fontSize: 20, name: 'Indenmizacion', value: siniestroList.siniestros[index].indenmizacion),
+                              //ApiItem(maxHeight: 50, fontSize: 20, name: 'Numero Poliza', value: siniestroList.siniestros[index].numeroPoliza.toString()),
+                              //ApiItem(maxHeight: 50, fontSize: 20, name: 'Perito', value: siniestroList.siniestros[index].dniPerito.toString()),
+                              
+                            ],
+                            
+                          );
+                          /*ButtonIcon(true, Icons.delete, 20, Colors.amber, (){
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context){
+                                    return FormDeleteSinister(idSiniestro: siniestroList.siniestros[index].idSiniestro);
+                                  });
+                              })*/
+                     
                     }
+                    ),
                     );
               }else{
                 return Container();

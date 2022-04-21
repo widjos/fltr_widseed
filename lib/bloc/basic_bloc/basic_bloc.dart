@@ -30,7 +30,7 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
       var response = await http.get(url);
       if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
         final body = json.decode(response.body);
-        final client = Client.fromService(body);
+        final client = Client.fromService(body,response);
 
         print('Number of books about http: ${client.email}');
         return emit(LoginDone(email: client.email, pass: client.password));

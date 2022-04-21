@@ -1,7 +1,7 @@
 
 import 'package:test/model/model.dart';
 
-class Client implements Model{
+class Client extends Model{
 
   late int dniCl;
   late String nombreCl;
@@ -19,7 +19,7 @@ class Client implements Model{
 
 
 
-  Client(dynamic data){
+  Client(dynamic data, dynamic resp): super(resp){
     dniCl = data['dniCl'];
     email = data['email'];
     password = data['password'];
@@ -33,11 +33,11 @@ class Client implements Model{
     ciudad = data['ciudad'];
     telefono = data['telefono'];
     observaciones = data['observaciones'];
-
+    response = resp;
 
   }
 
-  Client.fromService(dynamic data){
+  Client.fromService(dynamic data , dynamic resp) : super(resp){
     dniCl = data['dniCl'];
     email = data['email'];
     password = data['password'];
@@ -51,6 +51,7 @@ class Client implements Model{
     ciudad = data['ciudad'];
     telefono = data['telefono'];
     observaciones = data['observaciones'];
+    response = resp;
   }
 
  

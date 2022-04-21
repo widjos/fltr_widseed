@@ -1,5 +1,12 @@
-abstract class Model {
+import 'package:http/http.dart' as http;
 
- Model.fromService(List<dynamic> data);
+abstract class Model {
+  late http.Response response;
+  
+  Model(dynamic resp){
+    response = resp;
+  }
+
+
 
 }

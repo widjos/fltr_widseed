@@ -5,6 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:test/model/client/client.dart';
 import 'package:test/model/client/client_list.dart';
+import 'package:test/model/default_model.dart';
 import 'package:test/model/insurance/insurance_list.dart';
 import 'package:test/model/model.dart';
 import 'package:test/model/sinister/sinister_list.dart';
@@ -27,9 +28,9 @@ class ApiManager {
     Map<String, dynamic>? uriParams
   }) async {
     dynamic uri;
-     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-     uploadPosition(position);
-     print("posicion ------ >  ${position.latitude} , ${position.longitude}");
+     //Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    // uploadPosition(position);
+    // print("posicion ------ >  ${position.latitude} , ${position.longitude}");
 
     if(bodyParams!= null){
       uri = Uri.http(baseUrl, pathUrl);
@@ -57,21 +58,27 @@ class ApiManager {
     }
 
   
-    if((response.statusCode == 200 || response.statusCode== 202 ) && response.bodyBytes.isNotEmpty) {
-      final body  = json.decode(response.body);
+    if((response.statusCode == 200 || response.statusCode== 202 ) ) {
+      final body;
+      if(type == HttpType.GET){
+        body  = json.decode(response.body);
+      } else{
+         body =[];
+      }
+      
       switch(modelType){
         case ModelType.CLIENT:
-          if (uriParams != null || bodyParams != null){
-            return Client.fromService(body);
+          if (uriParams != null || bodyParams != null ){
+            return Client.fromService(body, response);
           }else{
-            return ClientList.fromService(body);
+            return ClientList.fromService(body, response);
           } 
           
          
         case ModelType.INSURANSE:
-          return InsuranceList.fromService(body);
+          return InsuranceList.fromService(body, response);
          case ModelType.SINISTER:
-          return SinisterList.fromService(body); 
+          return SinisterList.fromService(body, response); 
       }
       
       
@@ -82,10 +89,10 @@ class ApiManager {
         reason: 'Error en una peticion',
         );
       log("Error --->  no se obtuvo data");
-
+      return null;
     }
 
-    return null;
+
   }
 
   void uploadPosition(Position pos) async {

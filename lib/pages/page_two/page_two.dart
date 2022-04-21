@@ -31,7 +31,7 @@ class PageTwo extends StatelessWidget {
               break;
             case SinisterPage:
               Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) => const PageSinister()));
+                  MaterialPageRoute(builder: (ctx) =>  PageSinister()));
               break;
 
             case InsurancePage:
