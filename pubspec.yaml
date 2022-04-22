@@ -49,6 +49,8 @@ dependencies:
   firebase_database: ^9.0.11
   firebase_database_web: ^0.2.0+10
   geolocator: ^8.2.0
+  sqflite: ^2.0.2+1
+  path_provider: ^2.0.9
 
 
 dev_dependencies:

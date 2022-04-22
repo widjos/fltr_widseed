@@ -23,8 +23,7 @@ class _AlertIconState extends State<AlertIcon> {
       ),
       actions: [
         TextButton(onPressed: (){
-           Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) =>  PageSinister()));
+           Navigator.pop(context);
                       
         }, child: const Text('Ok'))
       ],

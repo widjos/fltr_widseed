@@ -9,8 +9,9 @@ import 'package:test/widgets/alert_icon.dart';
 class FormDeleteSinister extends StatefulWidget {
   final int idSiniestro;
   bool _idValidate = false;
+  VoidCallback llamada;
 
-  FormDeleteSinister({Key? key, required this.idSiniestro}) : super(key: key);
+  FormDeleteSinister({Key? key, required this.idSiniestro, required this.llamada}) : super(key: key);
 
   @override
   State<FormDeleteSinister> createState() => _FormDeleteSinisterState();
@@ -74,20 +75,10 @@ class _FormDeleteSinisterState extends State<FormDeleteSinister> {
                 }
               });
 
-              /*
-            ApiManager.shared.request(
-              baseUrl: "10.0.2.2:9595",
-              pathUrl: "/siniestro/eliminar",
-              uriParams: {'idSiniestro': idSiniestroController.text},
-              type: HttpType.DELETE,
-              modelType: ModelType.SINISTER
-              );*/
             },
             child: const Text('Eliminar')),
         TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: widget.llamada,
             child: const Text('Cancelar'))
       ],
     );

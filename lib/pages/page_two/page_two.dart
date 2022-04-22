@@ -4,16 +4,35 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test/bloc/basic_bloc/basic_bloc.dart';
+import 'package:test/model/client/client_list.dart';
+import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/pages/clients/page_clients.dart';
 import 'package:test/pages/insurance/page_insurance.dart';
 import 'package:test/pages/page_two/card_button.dart';
 import 'package:test/pages/sinister/page_sinister.dart';
+import 'package:test/provider/api_manager.dart';
+import 'package:test/repository/cliente_repository.dart';
+import 'package:test/repository/db_manager.dart';
+import 'package:test/repository/sinister_repository.dart';
+import 'package:test/util/app_type.dart';
+import 'package:test/util/model_type.dart';
 
-class PageTwo extends StatelessWidget {
+class PageTwo extends StatefulWidget {
   final String tittle;
   bool theme;
   PageTwo({required this.tittle, required this.theme, Key? key})
       : super(key: key);
+
+  @override
+  State<PageTwo> createState() => _PageTwoState();
+}
+
+class _PageTwoState extends State<PageTwo> {
+  @override
+  void initState() {
+    loadDataLocal();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +45,21 @@ class PageTwo extends StatelessWidget {
           switch (state.runtimeType) {
             case ClientsPage:
               final estado = state as ClientsPage;
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) =>  PageClients(theme: theme)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (ctx) => PageClients(theme: widget.theme)));
               break;
             case SinisterPage:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) =>  PageSinister()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (ctx) => PageSinister()));
               break;
 
             case InsurancePage:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) => const PageInsurance()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (ctx) => PageInsurance(theme: widget.theme)));
               break;
           }
         },
@@ -44,7 +67,8 @@ class PageTwo extends StatelessWidget {
           builder: (context, state) {
             return Scaffold(
                 appBar: AppBar(
-                  backgroundColor: theme ?  Colors.black : Colors.green[700] ,
+                  backgroundColor:
+                      widget.theme ? Colors.black : Colors.green[700],
                   title: const Text('Bienvenido'),
                 ),
                 body: ListView(
@@ -60,10 +84,8 @@ class PageTwo extends StatelessWidget {
                               children: [
                                 const Icon(Icons.account_box_rounded, size: 40),
                                 Text(
-                                  tittle,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                  widget.tittle,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 )
                               ],
                             ),
@@ -111,24 +133,26 @@ class PageTwo extends StatelessWidget {
       ),
     );
   }
+
+  void loadDataLocal() async {
+    ClientList dataCl = await ApiManager.shared.request(
+        baseUrl: "10.0.2.2:9595",
+        pathUrl: "/cliente/buscar",
+        type: HttpType.GET,
+        modelType: ModelType.CLIENT) as ClientList;
+
+    SinisterList dataSn = await ApiManager.shared.request(
+        baseUrl: "10.0.2.2:9595",
+        pathUrl: "/siniestro/buscar",
+        type: HttpType.GET,
+        modelType: ModelType.SINISTER) as SinisterList;
+
+    ClienteRepository.shared.save(data: dataCl.clientes, tableName: 'cliente');
+    SinisterRepository.shared.save(data: dataSn.siniestros, tableName: 'siniestro');
+
+    List listTemp =  await SinisterRepository.shared.selectAll(tableName: 'siniestro');
+    listTemp.forEach((element) {
+      print(element);
+    });
+  }
 }
-/*
-Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 20, top: 20),
-            child: const Text(
-              'Bienvenido',
-              style:  TextStyle(
-                fontSize: 20
-              ),
-              ),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                crashlytics.setCustomKey('email crashed', tittle);
-                FirebaseCrashlytics.instance.crash();
-              },
-              child: const Text('Generar Error'))
-        ],
-      ),*/

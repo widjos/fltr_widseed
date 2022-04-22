@@ -7,6 +7,7 @@ import 'package:test/util/app_type.dart';
 import 'package:test/util/model_type.dart';
 
 class FormClient extends StatefulWidget {
+  VoidCallback llamada;
   TextEditingController nombreController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -20,7 +21,7 @@ class FormClient extends StatefulWidget {
   TextEditingController telefonoController = TextEditingController();
   TextEditingController observController = TextEditingController();
 
-  FormClient({Key? key}) : super(key: key);
+  FormClient({Key? key, required this.llamada}) : super(key: key);
 
   @override
   State<FormClient> createState() => _FormClientState();
@@ -157,7 +158,7 @@ class _FormClientState extends State<FormClient> {
                 // If the form is valid, display a snackbar. In the real world,
                 // you'd often call a server or save the information in a database.
 
-                  ApiManager.shared.request(
+                ApiManager.shared.request(
                     baseUrl: "10.0.2.2:9595",
                     pathUrl: "/cliente/guardar",
                     bodyParams: json.encode({
@@ -177,27 +178,16 @@ class _FormClientState extends State<FormClient> {
                     type: HttpType.POST,
                     modelType: ModelType.CLIENT);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Nuevo usuario registrado')));
-
-                        
-                      
-                  
-                    
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Nuevo usuario registrado')));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Vlidar form primer')));
               }
             },
             child: const Text("Registrar")),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancelar'))
+        TextButton(onPressed: widget.llamada, child: const Text('Salir'))
       ],
     );
   }
 }
-
-

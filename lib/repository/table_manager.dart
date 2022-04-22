@@ -1,25 +1,57 @@
+import 'package:sqflite/sqflite.dart';
 
+class TableManager {
+  TableManager._privateContructor();
 
-import 'dart:io';
+  static final TableManager shared = TableManager._privateContructor();
 
-/*class DbManager {
-  DbManager._privateContrusctor();
+  Future<void> cliente(Database db) async {
+    const String table = '''CREATE TABLE cliente(
+       id INTEGER PRIMARY KEY AUTOINCREMENT, 
+     dniCl INTEGER,
+     nombreCl TEXT,
+     password TEXT,
+     email TEXT,
+     apellido1 TEXT,
+     apellido2 TEXT,
+     claseVia TEXT,
+     nombreVia TEXT,
+     numeroVia INTEGER, 
+     codPostal INTEGER, 
+     ciudad INTEGER, 
+     telefono INTEGER, 
+     observaciones TEXT
+     )''';
 
-  static final DbManager shared = DbManager._privateContrusctor();
+    await db.execute(table);
+  }
 
-  factory DbManager() => shared;
+  Future<void> sinister(Database db) async {
+    const String tabla = '''CREATE TABLE siniestro(
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    idSiniestro INTEGER,
+    fechaSiniestro TEXT,
+    causas  TEXT,
+    aceptado  TEXT,
+    indenmizacion TEXT,
+    numeroPoliza TEXT,
+    dniPerito INTEGER
+    )''';
+    await db.execute(tabla);
+  }
 
-  Future<Database> get db async{
-    if(_db) != null) return _db!;
+  Future<void> insurance(Database db) async {
+    const String tabla = '''CREATE TABLE seguro(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,  
+   numeroPoliza INTEGER,
+        ramo TEXT,
+        fechaInicio TEXT,
+        fechaVencimiento TEXT,
+        condicionesParticulares  TEXT,
+        observaciones  TEXT,
+        dniCl INTEGER
+    )''';
 
-    _db = await initdb();
-    return _db!;
-
-    }
-
-  Future<Database> initDb() async {
-    Directory directoryDb = await getApplicationDocumentsDirectory();
-    String path = ${directoryDb};
-  }  
-
-}*/
+    await db.execute(tabla);
+  }
+}

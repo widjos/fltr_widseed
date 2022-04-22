@@ -1,9 +1,43 @@
-/*class TableManager{
-  TableManager._privateConstructor();
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:test/repository/db_manager.dart';
 
-  static final TableManager shared = TableManager._privateConstructor();
+abstract class MasterRepository{
+  Future<dynamic> save({ required List<dynamic> data , required String  tableName }) async{
+    Database dbManager = await DbManager().db;
 
-  Future<void> movie(Database db) async {
+    Batch batch = dbManager.batch();
+    for( final item in data){
+      batch.insert(tableName, item.toDatabase());
+    }
+
+    return batch.commit();
+  }
+
+
+  Future<dynamic> delete({required String tableName}) async {
+    Database dbManager = await DbManager().db;
+    dbManager.delete(tableName);
 
   }
-}*/
+
+
+
+  Future<List<Map<String, dynamic>>> selectAll({required String tableName}) async {
+    Database dbManager = await DbManager().db;
+
+    return await dbManager.query(tableName);
+  }
+
+  Future<List<Map<String ,dynamic>>> selectWhere({
+    required String tableName,
+    required String  whereClause,
+    required List<String> whereArgs,
+  }) async{
+    Database dbManager = await DbManager().db;
+    return await dbManager.query(tableName, where: whereClause, whereArgs:  whereArgs);
+  }
+
+   
+}

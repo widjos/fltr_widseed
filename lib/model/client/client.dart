@@ -54,5 +54,39 @@ class Client extends Model{
     response = resp;
   }
 
+
+  Client.fromDb(dynamic data , dynamic resp) : super(resp){
+        dniCl = data['dniCl'];
+    email = data['email'];
+    password = data['password'];
+    nombreCl = data['nombreCl'];
+    apellido1 = data['apellido1'];
+    apellido2 = data['apellido2'];
+    claseVia = data['claseVia'];
+    nombreVia = data['nombreVia'];
+    numeroVia = data['numeroVia'];
+    codPostal = data['codPostal'];
+    ciudad = data['ciudad'];
+    telefono = data['telefono'];
+    observaciones = data['observaciones'];
+    response = resp;
+  }
+
+  Map<String, dynamic> toDatabase() => {
+    "dniCl" : dniCl,
+    "nombreCl": nombreCl,
+    "password": password,
+    "email" : email,
+    "apellido1": apellido1,
+    "apellido2": apellido2,
+    "claseVia": claseVia,
+    "nombreVia": nombreVia,
+    "numeroVia": numeroVia,
+    "codPostal": codPostal,
+    "ciudad": ciudad,
+    "telefono": telefono,
+    "observaciones": observaciones
+};
+
  
 }

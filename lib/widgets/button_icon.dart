@@ -28,7 +28,7 @@ class _ButtonIconState extends State<ButtonIcon> {
         child: Icon(
           widget.icon,
           size: widget.iconSize,
-          color: const Color(0xFF4268D3)
+          color: Colors.white
         ),
         heroTag: null,
       ),

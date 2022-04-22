@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -6,14 +7,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:test/pages/page_one/page_one.dart';
 import 'package:test/prefs/style.dart';
 import 'package:test/prefs/theme_provider.dart';
+import 'package:test/repository/db_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   runZonedGuarded(
       () => runApp(const MyApp()),
       ((error, stack) =>  FirebaseCrashlytics.instance.recordError(error, stack)));
@@ -29,6 +32,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool switchValue = false;
   ThemeProvider themeProvider = ThemeProvider();
+  
 
   void getCurrentTheme() async {
     DatabaseReference refInit = FirebaseDatabase.instance.ref('preferences/theme');
@@ -46,8 +50,14 @@ class _MyAppState extends State<MyApp> {
     await _initializeC();
     await _initializeRC();
     await _initializeCM();
+    await _deleteDb();
   }
 
+Future<void> _deleteDb() async {
+      Directory directoryDb = await getApplicationDocumentsDirectory();
+      String path = "${directoryDb.path}test_db";
+      databaseFactory.deleteDatabase(path);
+    }
   Future<void> _initializeC() async {
     await FirebaseCrashlytics.instance
         .setCrashlyticsCollectionEnabled(true);
