@@ -35,8 +35,7 @@ class _PageSinisterState extends State<PageSinister> {
     ApiManager.shared.request(
       baseUrl: "10.0.2.2:9595", 
       pathUrl: "/siniestro/buscar", 
-      type: HttpType.GET, 
-      modelType: ModelType.SINISTER) as SinisterList;
+      type: HttpType.GET, ) as SinisterList;
 
       if(data.siniestros.isNotEmpty){
         setState(() {
@@ -60,7 +59,7 @@ class _PageSinisterState extends State<PageSinister> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: FutureBuilder(
-        future: ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/siniestro/buscar", type: HttpType.GET, modelType: ModelType.SINISTER),
+        future: ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/siniestro/buscar", type: HttpType.GET),
         builder: (BuildContext context, snapshot){
           switch(snapshot.connectionState){
             case ConnectionState.waiting:

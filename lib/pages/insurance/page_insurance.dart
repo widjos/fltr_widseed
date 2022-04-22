@@ -28,7 +28,7 @@ class _PageInsuranceState extends State<PageInsurance> {
   }
 
   Future _getData() async {
-    InsuranceList data = await ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/seguro/buscar", type: HttpType.GET, modelType: ModelType.INSURANSE) as InsuranceList;
+    InsuranceList data = await ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/seguro/buscar", type: HttpType.GET) as InsuranceList;
 
     if(data.seguros.isNotEmpty){
       setState(() {
@@ -47,7 +47,7 @@ class _PageInsuranceState extends State<PageInsurance> {
            
       ),
       body: FutureBuilder(
-        future: ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/seguro/buscar", type: HttpType.GET, modelType: ModelType.INSURANSE),
+        future: ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/seguro/buscar", type: HttpType.GET),
         builder: (BuildContext context, snapshot){
           switch (snapshot.connectionState){
             case ConnectionState.waiting:

@@ -18,8 +18,7 @@ import 'package:test/repository/db_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runZonedGuarded(
-      () => runApp(const MyApp()),
-      ((error, stack) =>  FirebaseCrashlytics.instance.recordError(error, stack)));
+      () => runApp(const MyApp()), ((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
 }
 
 class MyApp extends StatefulWidget {
@@ -32,17 +31,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool switchValue = false;
   ThemeProvider themeProvider = ThemeProvider();
-  
 
   void getCurrentTheme() async {
     DatabaseReference refInit = FirebaseDatabase.instance.ref('preferences/theme');
     refInit.onValue.listen((DatabaseEvent event) {
-       final data  = event.snapshot.value;
-       themeProvider.darkTheme = data as bool; 
+      final data = event.snapshot.value;
+      themeProvider.darkTheme = data as bool;
     });
     //themeProvider.darkTheme = await themeProvider.preference.getTheme();
   }
-  
+
   late Future<void> _firebase;
 
   Future<void> _initializeFB() async {
@@ -53,14 +51,14 @@ class _MyAppState extends State<MyApp> {
     await _deleteDb();
   }
 
-Future<void> _deleteDb() async {
-      Directory directoryDb = await getApplicationDocumentsDirectory();
-      String path = "${directoryDb.path}test_db";
-      databaseFactory.deleteDatabase(path);
-    }
+  Future<void> _deleteDb() async {
+    Directory directoryDb = await getApplicationDocumentsDirectory();
+    String path = "${directoryDb.path}test_db";
+    databaseFactory.deleteDatabase(path);
+  }
+
   Future<void> _initializeC() async {
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(true);
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
     Function onOriginalError = FlutterError.onError as Function;
     FlutterError.onError = (FlutterErrorDetails errorDetails) async {
@@ -72,8 +70,9 @@ Future<void> _deleteDb() async {
   Future<void> _initializeRC() async {
     FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
     remoteConfig.setDefaults({'parametro': 5});
-     await remoteConfig.setConfigSettings(RemoteConfigSettings(fetchTimeout: Duration(seconds: 10), minimumFetchInterval: Duration.zero));
-     await remoteConfig.fetchAndActivate();
+    await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(fetchTimeout: Duration(seconds: 10), minimumFetchInterval: Duration.zero));
+    await remoteConfig.fetchAndActivate();
     print('------------------------> ' + remoteConfig.getString('parametro'));
   }
 
@@ -83,8 +82,8 @@ Future<void> _deleteDb() async {
     String? token = await cloudMessaging.getToken();
     print('token: $token');
     FirebaseMessaging.onMessage.listen((event) {
-    print('Titulo -- '+ event.notification!.title.toString());
-    print('Mensaje -- '+ event.notification!.body.toString());
+      print('Titulo -- ' + event.notification!.title.toString());
+      print('Mensaje -- ' + event.notification!.body.toString());
     });
   }
 
@@ -97,59 +96,46 @@ Future<void> _deleteDb() async {
 
   @override
   Widget build(BuildContext context) {
-    
     return ChangeNotifierProvider(
-      create: (_) => themeProvider,
-      child: Consumer<ThemeProvider>(
-        builder: ((context, value, child) {
+        create: (_) => themeProvider,
+        child: Consumer<ThemeProvider>(builder: ((context, value, child) {
           return FutureBuilder(
-        future: _firebase,
-        builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return  MaterialApp(
-              title: 'Flutter Demo',
-              theme: Style.themeData(themeProvider.darkTheme),
-              home:  Scaffold(
-                appBar: AppBar(
-                  backgroundColor: themeProvider.darkTheme ?  Colors.black : Colors.green[700],
-                  title: const Text("Seeds"),
-                ),
-                body: Stack(
-                  children: [
-                    PageOne(theme: switchValue),
-                    Container(
-                      child: Switch(
-                    value: switchValue,
-                    onChanged: (val) async{
-                      DatabaseReference ref = FirebaseDatabase.instance.ref('preferences');
-                       
-                      themeProvider.darkTheme = !themeProvider.darkTheme;
-                      await ref.update({
-                        'theme': themeProvider.darkTheme
-                      });
-                      setState(() {
-                        switchValue = val;
-                      });
-                    }
-                    )
-                    )
-                  ],
-                ),
+              future: _firebase,
+              builder: ((context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return MaterialApp(
+                    title: 'Flutter Demo',
+                    theme: Style.themeData(themeProvider.darkTheme),
+                    home: Scaffold(
+                      appBar: AppBar(
+                        backgroundColor: themeProvider.darkTheme ? Colors.black : Colors.green[700],
+                        title: const Text("Seeds"),
+                      ),
+                      body: Stack(
+                        children: [
+                          PageOne(theme: switchValue),
+                          Container(
+                              child: Switch(
+                                  value: switchValue,
+                                  onChanged: (val) async {
+                                    DatabaseReference ref = FirebaseDatabase.instance.ref('preferences');
 
-              ),
-              
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-            }
-          }
-        )
-        );
-        }
-      ) 
-      )
-    );
-  } 
+                                    themeProvider.darkTheme = !themeProvider.darkTheme;
+                                    await ref.update({'theme': themeProvider.darkTheme});
+                                    setState(() {
+                                      switchValue = val;
+                                    });
+                                  }))
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }));
+        })));
+  }
 }

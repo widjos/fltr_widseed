@@ -7,6 +7,7 @@ import 'package:test/model/client/client.dart';
 import 'package:http/http.dart' as http;
 
 part 'basic_state.dart';
+
 part 'basic_event.dart';
 
 class BasicBloc extends Bloc<BasicEvent, BasicState> {
@@ -23,17 +24,17 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
     }));
 
     on<LoginSpring>((event, emit) async {
-      var url = Uri.http("10.0.2.2:9595", "/cliente/buscar/email/password",
-          {'email': event.email, 'password': event.pass});
+      var url =
+          Uri.http("10.0.2.2:9595", "/cliente/buscar/email/password", {'email': event.email, 'password': event.pass});
 
       // Await the http get response, then decode the json-formatted response.
       var response = await http.get(url);
       if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
         final body = json.decode(response.body);
-        final client = Client.fromService(body,response);
+        //final client = Client.fromService(body,response);
 
-        print('Number of books about http: ${client.email}');
-        return emit(LoginDone(email: client.email, pass: client.password));
+        /*print('Number of books about http: ${client.email}');
+        return emit(LoginDone(email: client.email, pass: client.password));*/
       } else {
         print('Request failed with status: ${response.statusCode}.');
         return emit(WrongCredentials());

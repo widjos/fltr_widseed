@@ -19,11 +19,10 @@ class ApiManager {
   static final ApiManager shared = ApiManager._privateContructor();
 
 
-  Future<Model?> request({
+  Future<dynamic> request({
     required String baseUrl,
     required String pathUrl,
     required HttpType type,
-    required ModelType modelType,
     String? bodyParams,
     Map<String, dynamic>? uriParams
   }) async {
@@ -59,14 +58,15 @@ class ApiManager {
 
   
     if((response.statusCode == 200 || response.statusCode== 202 ) ) {
-      final body;
+      return json.decode(response.body);
+     /* final body;
       if(type == HttpType.GET){
         body  = json.decode(response.body);
       } else{
          body =[];
-      }
+      }*
       
-      switch(modelType){
+      *switch(modelType){
         case ModelType.CLIENT:
           if (uriParams != null || bodyParams != null ){
             return Client.fromService(body, response);
@@ -80,7 +80,7 @@ class ApiManager {
          case ModelType.SINISTER:
           return SinisterList.fromService(body, response); 
       }
-      
+      */
       
     }else{
       FirebaseCrashlytics.instance.recordError(

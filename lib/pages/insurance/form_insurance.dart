@@ -140,8 +140,7 @@ class _FormInsuranceState extends State<FormInsurance> {
                       "observaciones": obsersavacionCtrl.text,
                       "dniCl": dniClCtrl.text
                     }),
-                    type: HttpType.POST,
-                    modelType: ModelType.INSURANSE);
+                    type: HttpType.POST);
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Actualizado')));

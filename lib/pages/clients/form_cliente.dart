@@ -176,7 +176,7 @@ class _FormClientState extends State<FormClient> {
                       "observaciones": widget.observController.text
                     }),
                     type: HttpType.POST,
-                    modelType: ModelType.CLIENT);
+                    );
 
                 ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Nuevo usuario registrado')));

@@ -54,8 +54,7 @@ class _FormDeleteSinisterState extends State<FormDeleteSinister> {
                           uriParams: {
                             'idSiniestro': idSiniestroController.text
                           },
-                          type: HttpType.DELETE,
-                          modelType: ModelType.SINISTER)
+                          type: HttpType.DELETE,)
                       .then((value) {
                     value != null && value.response.statusCode == 200
                         ? showDialog(
