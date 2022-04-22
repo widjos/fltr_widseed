@@ -95,10 +95,10 @@ class _PageSinisterState extends State<PageSinister> {
                                   context: context, 
                                   builder: (BuildContext context){
                                     return FormDeleteSinister(idSiniestro: list[index].idSiniestro, llamada: (){
-                                      refreshData();
+                                      
                                       Navigator.pop(context);
                                     });
-                                  });
+                                  }).then((value) => {refreshData()});
                               }),)
                               //ApiItem(maxHeight: 50, fontSize: 20, name: 'Id Siniestro', value: siniestroList.siniestros[index].idSiniestro.toString()),
                               //ApiItem(maxHeight: 50, fontSize: 20, name: 'Fecha', value: siniestroList.siniestros[index].fechaSiniestro),

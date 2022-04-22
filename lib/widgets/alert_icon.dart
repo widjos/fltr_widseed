@@ -23,7 +23,7 @@ class _AlertIconState extends State<AlertIcon> {
       ),
       actions: [
         TextButton(onPressed: (){
-           Navigator.pop(context);
+           Navigator.of(context)..pop()..pop();
                       
         }, child: const Text('Ok'))
       ],
