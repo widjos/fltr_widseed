@@ -10,10 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:test/model/insurance/insurance.dart';
 import 'package:test/pages/page_one/page_one.dart';
 import 'package:test/prefs/style.dart';
 import 'package:test/prefs/theme_provider.dart';
+import 'package:test/provider/client_provider.dart';
+import 'package:test/provider/insurance_provider.dart';
+import 'package:test/provider/sinister_provider.dart';
 import 'package:test/repository/db_manager.dart';
+import 'package:test/repository/sinister_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +54,11 @@ class _MyAppState extends State<MyApp> {
     await _initializeRC();
     await _initializeCM();
     await _deleteDb();
+    //await SinisterProvider.shared.initSinistroTable();
+    await ClientProvider.shared.initClientDb();
+    await InsuranceProvider.shared.initInsuranceDb();
+
+
   }
 
   Future<void> _deleteDb() async {

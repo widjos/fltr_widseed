@@ -2,9 +2,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:test/model/insurance/insurance.dart';
 import 'package:test/model/insurance/insurance_list.dart';
+import 'package:test/model/sinister/sinister.dart';
 import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/pages/sinister/form_delete_sinister.dart';
 import 'package:test/provider/api_manager.dart';
+import 'package:test/provider/sinister_provider.dart';
 import 'package:test/repository/sinister_repository.dart';
 import 'package:test/util/app_type.dart';
 import 'package:test/util/model_type.dart';
@@ -31,24 +33,17 @@ class _PageSinisterState extends State<PageSinister> {
   }
 
   Future refreshData() async {
-   SinisterList data = await
-    ApiManager.shared.request(
-      baseUrl: "10.0.2.2:9595", 
-      pathUrl: "/siniestro/buscar", 
-      type: HttpType.GET, ) as SinisterList;
 
-      if(data.siniestros.isNotEmpty){
+      List<Sinister> data = await SinisterProvider.shared.getAllDb(context);
+
+      if(data.isNotEmpty){
         setState(() {
-          data.siniestros.forEach((element) { list.add(element);});
+          for (var element in data) {
+            list.add(element);
+          }
         });
       }
 
-      /*List listTemp = await SinisterRepository.shared.selectAll(tableName: 'siniestro');
-      if(listTemp.isNotEmpty){
-        setState(() {
-          listTemp.forEach((element) {list.add(element);});
-        });
-      }*/
   }
 
   @override
@@ -59,7 +54,7 @@ class _PageSinisterState extends State<PageSinister> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: FutureBuilder(
-        future: ApiManager.shared.request(baseUrl: "10.0.2.2:9595", pathUrl: "/siniestro/buscar", type: HttpType.GET),
+        future: SinisterProvider.shared.getAllDb(context),
         builder: (BuildContext context, snapshot){
           switch(snapshot.connectionState){
             case ConnectionState.waiting:
@@ -72,9 +67,9 @@ class _PageSinisterState extends State<PageSinister> {
             case ConnectionState.done:
             case ConnectionState.active:
               if(snapshot.hasData){
-                siniestroList = snapshot.requireData as SinisterList;
-                if(siniestroList.siniestros.isNotEmpty){
-                  list = siniestroList.siniestros;
+                final List sinisterList = snapshot.requireData as List<Sinister>;
+                if(sinisterList.isNotEmpty){
+                  list = sinisterList;
                 }
                   return RefreshIndicator( 
                     onRefresh: refreshData,
@@ -82,7 +77,7 @@ class _PageSinisterState extends State<PageSinister> {
                     separatorBuilder: (context, index) => Divider(
                       color: Theme.of(context).primaryColor,
                     ),
-                    itemCount: siniestroList.siniestros.length,
+                    itemCount: list.length,
                     itemBuilder: (BuildContext context, int index){
                       return 
                           Column(

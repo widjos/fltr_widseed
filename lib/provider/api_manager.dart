@@ -3,15 +3,9 @@ import 'dart:developer';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:test/model/client/client.dart';
-import 'package:test/model/client/client_list.dart';
-import 'package:test/model/default_model.dart';
-import 'package:test/model/insurance/insurance_list.dart';
-import 'package:test/model/model.dart';
-import 'package:test/model/sinister/sinister_list.dart';
+
 import 'package:test/util/app_type.dart';
 import 'package:http/http.dart' as http;
-import 'package:test/util/model_type.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ApiManager {

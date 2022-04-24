@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:test/provider/api_manager.dart';
-import 'package:test/util/app_type.dart';
-import 'package:test/util/model_type.dart';
+import 'package:test/model/client/client_list.dart';
+import 'package:test/provider/client_provider.dart';
 
 class FormClient extends StatefulWidget {
   VoidCallback llamada;
@@ -158,10 +155,7 @@ class _FormClientState extends State<FormClient> {
                 // If the form is valid, display a snackbar. In the real world,
                 // you'd often call a server or save the information in a database.
 
-                ApiManager.shared.request(
-                    baseUrl: "10.0.2.2:9595",
-                    pathUrl: "/cliente/guardar",
-                    bodyParams: json.encode({
+                  var  temp =  {
                       "nombreCl": widget.nombreController.text,
                       "password": widget.passController.text,
                       "email": widget.emailController.text,
@@ -169,17 +163,14 @@ class _FormClientState extends State<FormClient> {
                       "apellido2": widget.apellido2Controller.text,
                       "claseVia": widget.claseViaController.text,
                       "nombreVia": widget.nombreViaController.text,
-                      "numeroVia": widget.numeroViaController.text,
-                      "codPostal": widget.condPostalController.text,
+                      "numeroVia": int.parse(widget.numeroViaController.text),
+                      "codPostal": int.parse(widget.condPostalController.text),
                       "ciudad": widget.ciudadController.text,
-                      "telefono": widget.telefonoController.text,
+                      "telefono": int.parse(widget.telefonoController.text),
                       "observaciones": widget.observController.text
-                    }),
-                    type: HttpType.POST,
-                    );
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Nuevo usuario registrado')));
+                    };
+                    final clientTemp = Client.toDb(temp);
+                    ClientProvider.shared.saveClientDb([clientTemp]);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Vlidar form primer')));

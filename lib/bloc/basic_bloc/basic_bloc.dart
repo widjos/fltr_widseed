@@ -31,10 +31,10 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
       var response = await http.get(url);
       if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
         final body = json.decode(response.body);
-        //final client = Client.fromService(body,response);
+        
 
-        /*print('Number of books about http: ${client.email}');
-        return emit(LoginDone(email: client.email, pass: client.password));*/
+        //print('Number of books about http: ${client.email}');
+        return emit(LoginDone(email: 'aasd', pass: '444'));
       } else {
         print('Request failed with status: ${response.statusCode}.');
         return emit(WrongCredentials());

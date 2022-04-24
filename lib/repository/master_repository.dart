@@ -39,5 +39,16 @@ abstract class MasterRepository{
     return await dbManager.query(tableName, where: whereClause, whereArgs:  whereArgs);
   }
 
+  Future<int> updateRow({
+     required String tableName,
+     required Map<String,dynamic> row,
+     required String whereClause,
+     required List<int> whereArgs,
+    }) async {
+      Database dbMager = await DbManager().db;
+      return await dbMager.update(tableName, row, where: whereClause, whereArgs: whereArgs);
+
+    }
+
    
 }
