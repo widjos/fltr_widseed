@@ -21,12 +21,7 @@ class PageOne extends StatelessWidget {
 
     FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
 
-    return /*Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 88, 204, 5),
-          title: const Text('Tarea 1'),
-        ),
-        body: */BlocProvider(
+    return BlocProvider(
             create: (BuildContext context) => BasicBloc(),
             child: BlocListener<BasicBloc, BasicState>(
               listener: (context, state) {

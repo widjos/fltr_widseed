@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test/model/client/client_list.dart';
 import 'package:test/pages/clients/form_cliente.dart';
+import 'package:test/pages/clients/show_client.dart';
 import 'package:test/provider/client_provider.dart';
 
 import 'package:test/widgets/button_icon.dart';
@@ -95,14 +96,30 @@ class _PageClientsState extends State<PageClients> {
                       itemBuilder: (BuildContext context, int index) {
                         return Column(
                           children: [
-                            RowData(
+                            ExpansionTile(
+                              title: RowData(
                               idData1: 'Id:',
                               valueData1: list[index].id.toString(),
                               idData2: 'email:',
                               valueData2: list[index].email,
-                              myButton: ButtonIcon(true, Icons.mark_chat_unread_sharp, 20, Colors.green, () {
-                                
-                              }),
+                            ),
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(left: 10 , top: 10, bottom: 15),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    ButtonIcon(true, Icons.mark_chat_unread_sharp, 20, Colors.green, () {
+                                       showDialog(
+                                         context: context, 
+                                         builder:  (BuildContext context){
+                                              return ShowClient(cliente: list[index]);
+                                         });
+                                    })
+                                  ],
+                                ),
+                              )
+                            ],
                             )
                           ],
                         );

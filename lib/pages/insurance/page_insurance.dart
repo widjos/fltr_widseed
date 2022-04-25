@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test/model/insurance/insurance_list.dart';
 import 'package:test/pages/insurance/form_insurance.dart';
+import 'package:test/pages/insurance/show_insurance.dart';
 import 'package:test/provider/insurance_provider.dart';
 import 'package:test/widgets/button_icon.dart';
 import 'package:test/widgets/row_data.dart';
@@ -66,32 +67,56 @@ class _PageInsuranceState extends State<PageInsurance> {
                       itemBuilder: (BuildContext context, int index) {
                         return Column(
                           children: [
-                            RowData(
-                              idData1: 'Numero Poliza:',
-                              valueData1: list[index].id.toString(),
-                              idData2: 'Fecha Inicio:',
-                              valueData2: list[index].fechaInicio,
-                              myButton: ButtonIcon(
-                                  true, Icons.update, 20, Colors.green, () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return FormInsurance(
-                                          numPoliza: list[index].id,
-                                          ramo: list[index].ramo,
-                                          fechaInicio: list[index].fechaInicio,
-                                          fechaFinal:
-                                              list[index].fechaVencimiento,
-                                          condParticulares: list[index]
-                                              .condicionesParticulares,
-                                          observaciones:
-                                              list[index].observaciones,
-                                          dniCl: list[index].dniCl,
-                                      );
-                                    }).then((value) => {
-                                      _getData()
-                                    });
-                              }),
+                            ExpansionTile(
+                              title: RowData(
+                                idData1: 'Numero Poliza:',
+                                valueData1: list[index].id.toString(),
+                                idData2: 'Fecha Inicio:',
+                                valueData2: list[index].fechaInicio,
+                              ),
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, top: 10, bottom: 10),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ButtonIcon(
+                                          true, Icons.info, 20, Colors.green,
+                                          () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return ShowInsurance(
+                                                  seguro: list[index]);
+                                            });
+                                      }),
+                                      ButtonIcon(
+                                          true, Icons.update, 20, Colors.green,
+                                          () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return FormInsurance(
+                                                numPoliza: list[index].id,
+                                                ramo: list[index].ramo,
+                                                fechaInicio:
+                                                    list[index].fechaInicio,
+                                                fechaFinal: list[index]
+                                                    .fechaVencimiento,
+                                                condParticulares: list[index]
+                                                    .condicionesParticulares,
+                                                observaciones:
+                                                    list[index].observaciones,
+                                                dniCl: list[index].dniCl,
+                                              );
+                                            }).then((value) => {_getData()});
+                                      })
+                                    ],
+                                  ),
+                                )
+                              ],
                             )
                           ],
                         );

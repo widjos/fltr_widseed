@@ -22,6 +22,15 @@ abstract class MasterRepository{
 
   }
 
+  Future<dynamic> deleteById({
+    required tableName,
+    required String whereClause,
+    required List<int> whereArgs, 
+    }) async {
+    Database dbManager = await DbManager().db;
+    dbManager.delete(tableName, where: whereClause, whereArgs: whereArgs );
+  }
+
 
 
   Future<List<Map<String, dynamic>>> selectAll({required String tableName}) async {
@@ -49,6 +58,23 @@ abstract class MasterRepository{
       return await dbMager.update(tableName, row, where: whereClause, whereArgs: whereArgs);
 
     }
+
+  Future<dynamic> alterTable({
+    required String tableName,
+    required String columnName,
+    required String type,
+  })async {
+    Database dbManager = await DbManager().db;
+    return  dbManager.execute('ALTER TABLE $tableName ADD COLUMN $columnName $type;');
+
+  }
+
+  Future<dynamic> showTable({
+    required String table,
+  }) async {
+    Database dbManager = await DbManager().db;
+    return dbManager.query(table);
+  }
 
    
 }

@@ -115,23 +115,4 @@ class _PageTwoState extends State<PageTwo> {
     );
   }
 
-/*void loadDataLocal() async {
-    ClientList dataCl = await ApiManager.shared.request(
-        baseUrl: "10.0.2.2:9595",
-        pathUrl: "/cliente/buscar",
-        type: HttpType.GET,) as ClientList;
-
-    SinisterList dataSn = await ApiManager.shared.request(
-        baseUrl: "10.0.2.2:9595",
-        pathUrl: "/siniestro/buscar",
-        type: HttpType.GET,) as SinisterList;
-
-    ClienteRepository.shared.save(data: dataCl.clientes, tableName: 'cliente');
-    SinisterRepository.shared.save(data: dataSn.siniestros, tableName: 'siniestro');
-
-    List listTemp =  await SinisterRepository.shared.selectAll(tableName: 'siniestro');
-    listTemp.forEach((element) {
-      print(element);
-    });
-  }*/
 }

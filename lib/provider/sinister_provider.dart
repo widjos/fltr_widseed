@@ -1,10 +1,9 @@
 
 
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart';
-import 'package:test/model/sinister/sinister.dart';
 import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/provider/api_manager.dart';
+import 'package:test/repository/db_manager.dart';
 import 'package:test/repository/sinister_repository.dart';
 import 'package:test/util/app_type.dart';
 
@@ -16,7 +15,7 @@ class SinisterProvider {
 
   Future<List<Sinister>> getAllDb(BuildContext context) async {
       final resultDb = await SinisterRepository.shared.selectAll(tableName: 'siniestro');
-      return SinisterList.fromService(resultDb).siniestros;
+      return SinisterList.fromDb(resultDb).siniestros;
   }
 
   Future<void> initSinistroTable() async {
@@ -26,5 +25,25 @@ class SinisterProvider {
       SinisterRepository.shared.save(data: sinisterList.siniestros, tableName: 'siniestro');
   }
 
+
+  Future<void> deleteSinister(int idSiniestro) async {
+    return SinisterRepository.shared.deleteById(
+      tableName: 'siniestro', 
+      whereClause: 'siniestro.id = ?',
+      whereArgs: [idSiniestro]
+      );
+  }
+
+  Future<void> addColumn({required column, required typeIn}) async {
+    var count = await SinisterRepository.shared.alterTable(
+      tableName: 'siniestro', 
+      columnName: column,
+      type: typeIn
+      );
+
+   print('---------------------> Nueva tabla ------------');
+   print(await SinisterRepository.shared.showTable(table: 'siniestro'));
+
+  }
 }
 

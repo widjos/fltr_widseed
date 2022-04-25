@@ -7,9 +7,8 @@ class RowData extends StatefulWidget {
   String valueData1;
   String idData2;
   String valueData2;
-  ButtonIcon myButton;
 
-  RowData({ Key? key, required this.idData1 , required this.valueData1, required this.idData2 , required this.valueData2 , required this.myButton }) : super(key: key);
+  RowData({ Key? key, required this.idData1 , required this.valueData1, required this.idData2 , required this.valueData2  }) : super(key: key);
 
   @override
   State<RowData> createState() => _RowDataState();
@@ -55,11 +54,6 @@ class _RowDataState extends State<RowData> {
             ],
             )
           ),
-          Spacer(),
-          Container(
-            padding: const EdgeInsets.only(left: 30, top: 10),
-            child:  widget.myButton,
-          )
         ],
       ),
       

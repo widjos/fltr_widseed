@@ -34,7 +34,7 @@ class TableManager {
     causas  TEXT,
     aceptado  TEXT,
     indenmizacion TEXT,
-    numeroPoliza TEXT,
+    numeroPoliza INTEGER,
     dniPerito INTEGER
     )''';
     await db.execute(tabla);

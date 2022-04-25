@@ -1,19 +1,19 @@
 
-import 'package:test/model/model.dart';
-import 'package:test/model/sinister/sinister.dart';
-
-
 class SinisterList {
 
   late List<Sinister> siniestros = []; 
 
   SinisterList.fromService(List<dynamic> data){
-    for (var element in data) {  siniestros.add(Sinister(element));}
+    for (var element in data) {  siniestros.add(Sinister.fromService(element));}
+  }
 
+  SinisterList.fromDb(List<dynamic> data){
+    for (var element in data) { siniestros.add(Sinister.fromDb(element));}
   }
 }
 
 class Sinister {
+  late int id;
   late int idSiniestro;
   late String fechaSiniestro;
   late String causas;
@@ -22,17 +22,7 @@ class Sinister {
   late int numeroPoliza;
   late int dniPerito;
 
-  Sinister(dynamic data){
-    idSiniestro = data['idSiniestro'];
-    fechaSiniestro = data['fechaSiniestro'];
-    causas = data['causas'];
-    aceptado = data['aceptado'];
-    indenmizacion = data['indenmizacion'];
-    numeroPoliza = data['seguro'];
-    dniPerito = data['perito']['dniPerito'];
-  }
-
-  Sinister.fromDb(dynamic data) {
+  Sinister.fromService(dynamic data){
     idSiniestro = data['idSiniestro'];
     fechaSiniestro = data['fechaSiniestro'];
     causas = data['causas'];
@@ -42,9 +32,18 @@ class Sinister {
     dniPerito = data['perito']['dniPerito'];
   }
 
+  Sinister.fromDb(dynamic data) {
+    id = data['id'];
+    fechaSiniestro = data['fechaSiniestro'];
+    causas = data['causas'];
+    aceptado = data['aceptado'];
+    indenmizacion = data['indenmizacion'];
+    numeroPoliza = data['numeroPoliza'];
+    dniPerito = data['dniPerito'];
+  }
+
 
 Map<String, dynamic> toDatabase() => {
-    "idSiniestro" : idSiniestro,
     "fechaSiniestro" : fechaSiniestro,
     "causas" : causas,
     "aceptado" : aceptado,
