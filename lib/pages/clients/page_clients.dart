@@ -54,7 +54,7 @@ class _PageClientsState extends State<PageClients> {
             case DeletionDone:
               final user = state as DeletionDone;
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Se elimino un cliente')));
+                  const SnackBar(content: Text('Se elimino un cliente')));
               break;
           }
         },
@@ -127,6 +127,10 @@ class _PageClientsState extends State<PageClients> {
                                           idData2: 'email:',
                                           valueData2: list[index].email,
                                         ),
+                                        iconColor: Theme.of(context)
+                                            .toggleableActiveColor,
+                                        collapsedIconColor: Theme.of(context)
+                                            .toggleableActiveColor,
                                         children: [
                                           Container(
                                             padding: const EdgeInsets.only(
@@ -150,14 +154,14 @@ class _PageClientsState extends State<PageClients> {
                                                                 list[index]);
                                                       });
                                                 }),
-                                                ButtonIcon(
-                                                    true,
-                                                    Icons
-                                                        .delete,
-                                                    20,
-                                                    Colors.green, () {
-                                                      BlocProvider.of<ClientBloc>(context).add(DeleteClient(idClient: list[index].id));
-                                                      _getData();
+                                                ButtonIcon(true, Icons.delete,
+                                                    20, Colors.green, () {
+                                                  BlocProvider.of<ClientBloc>(
+                                                          context)
+                                                      .add(DeleteClient(
+                                                          idClient:
+                                                              list[index].id));
+                                                  _getData();
                                                 })
                                               ],
                                             ),

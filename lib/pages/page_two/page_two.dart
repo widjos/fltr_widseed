@@ -54,7 +54,7 @@ class _PageTwoState extends State<PageTwo> {
                   title: const Text('Bienvenido'),
                 ),
                 body: ListView(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 10, bottom: 25),
                   children: [
                     LimitedBox(
                       maxHeight: 100,
