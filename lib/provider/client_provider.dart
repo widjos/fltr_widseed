@@ -30,5 +30,12 @@ class ClientProvider {
   void saveClientDb(List<dynamic> entrada){
     ClienteRepository.shared.save(data: entrada, tableName: 'cliente');
   }
+
+  Future<void> deleteClient(int idClient) async {
+    return ClienteRepository.shared.deleteById(
+      tableName: 'cliente', 
+      whereClause: 'cliente.id = ?', 
+      whereArgs: [idClient]);
+  }
  
  }
