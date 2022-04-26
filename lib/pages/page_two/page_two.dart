@@ -6,6 +6,7 @@ import 'package:test/pages/clients/page_clients.dart';
 import 'package:test/pages/insurance/page_insurance.dart';
 import 'package:test/pages/page_two/card_button.dart';
 import 'package:test/pages/sinister/page_sinister.dart';
+import 'package:test/widgets/gradient_back.dart';
 
 class PageTwo extends StatefulWidget {
   final String tittle;
@@ -50,10 +51,13 @@ class _PageTwoState extends State<PageTwo> {
           builder: (context, state) {
             return Scaffold(
                 appBar: AppBar(
-                  backgroundColor: widget.theme ? Colors.black : Colors.green[700],
+                  backgroundColor: Theme.of(context).primaryColor,
                   title: const Text('Bienvenido'),
                 ),
-                body: ListView(
+                body: Stack(
+                  children: [
+                    GradientBack(tittle: ''),
+                    ListView(
                   padding: const EdgeInsets.only(top: 10, bottom: 25),
                   children: [
                     LimitedBox(
@@ -107,6 +111,8 @@ class _PageTwoState extends State<PageTwo> {
                           BlocProvider.of<BasicBloc>(context).add(ToSinister());
                         },
                         picture: 'assets/img/siniestro.jpg')
+                  ],
+                )
                   ],
                 ));
           },

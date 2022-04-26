@@ -14,3 +14,4 @@ class DeleteClient extends ClientEvent {
   List<Object?> get props => [idClient];
 
 }
+

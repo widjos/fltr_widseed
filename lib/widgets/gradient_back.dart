@@ -10,18 +10,17 @@ class GradientBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    var list = [Theme.of(context).primaryColorDark, Theme.of(context).primaryColorLight];
+
     heightNab = heightNab ?? MediaQuery.of(context).size.height;
     return Container(
       height: heightNab,
-      decoration: const BoxDecoration(
+      decoration:  BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(163, 9, 121, 28),
-            Color.fromARGB(255, 187, 255, 0)
-          ],
-        begin: FractionalOffset(0.2, 0.0),
-        end: FractionalOffset(1.0, 0.6),
-        stops: [0.0, 0.6,],
+          colors: list,
+        begin: const FractionalOffset(0.2, 0.0),
+        end: const FractionalOffset(1.0, 0.6),
+        stops: const [0.0, 0.6,],
         tileMode: TileMode.clamp 
         )
       ),
@@ -38,18 +37,6 @@ class GradientBack extends StatelessWidget {
         ),
       ),
       
-      
-       /*Text(
-        tittle,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 30.0,
-          fontFamily: "Lato",
-          fontWeight: FontWeight.bold
-        )
-      ),*/
-      //alignment: const Alignment(-0.9,-0.6),
-
     );
   }
 }

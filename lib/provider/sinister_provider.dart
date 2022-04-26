@@ -1,9 +1,7 @@
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/provider/api_manager.dart';
-import 'package:test/repository/db_manager.dart';
 import 'package:test/repository/sinister_repository.dart';
 import 'package:test/util/app_type.dart';
 

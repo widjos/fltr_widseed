@@ -22,13 +22,13 @@ class _ButtonIconState extends State<ButtonIcon> {
   Widget build(BuildContext context) {
     return Expanded(
       child: FloatingActionButton(
-        backgroundColor: widget.color,
+        backgroundColor: Theme.of(context).primaryColor,
         mini: widget.mini,
         onPressed: widget.onPressed,
         child: Icon(
           widget.icon,
           size: widget.iconSize,
-          color: Colors.white
+          color: Colors.white,
         ),
         heroTag: null,
       ),

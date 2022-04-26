@@ -50,11 +50,10 @@ class _PageClientsState extends State<PageClients> {
           switch (state.runtimeType) {
             case ClientPage:
               break;
-
             case DeletionDone:
               final user = state as DeletionDone;
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Se elimino un cliente')));
+                   SnackBar(content: Text('Se elimino un cliente con id = ${user.idClient}')));
               break;
           }
         },
