@@ -20,6 +20,20 @@ class LoginDone extends BasicState{
   LoginDone({required this.email, required this.pass});
 }
 
+class LoginDbDone extends BasicState {
+  final String email;
+  final String pass;
+
+  LoginDbDone({required this.email, required this.pass});
+}
+
+class LogoutDone extends BasicState{
+
+  dynamic code;
+
+  LogoutDone({required this.code});
+}
+
 class WrongCredentials extends BasicState{}
 
 class EmailNotValid extends BasicState{}

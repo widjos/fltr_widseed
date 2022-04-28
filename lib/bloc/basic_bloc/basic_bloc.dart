@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:http/http.dart' as http;
+import 'package:test/provider/client_provider.dart';
+import 'package:test/repository/cliente_repository.dart';
 
 part 'basic_state.dart';
 
@@ -37,6 +40,18 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
         return emit(WrongCredentials());
       }
     });
+
+   on<LoginDb>((event, emit) async  {
+     print(await ClienteRepository.shared.showTable(table: 'cliente')); 
+     dynamic result = await ClientProvider.shared.logInDb(event.email, event.pass);
+     result.isEmpty  ? emit(WrongCredentials()) :  emit(LoginDone(email: 'prueba', pass: '444'));
+
+   }); 
+
+    on<LogOut>(((event, emit) async {
+      dynamic resp = await ClientProvider.shared.logOutClientApi();
+      emit(LogoutDone(code: resp));
+    }));
 
     on<EmailInvalid>(((event, emit) {
       emit(EmailNotValid());

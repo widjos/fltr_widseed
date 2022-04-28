@@ -2,8 +2,10 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test/bloc/basic_bloc/basic_bloc.dart';
+import 'package:test/main.dart';
 import 'package:test/pages/clients/page_clients.dart';
 import 'package:test/pages/insurance/page_insurance.dart';
+import 'package:test/pages/page_one/page_one.dart';
 import 'package:test/pages/page_two/card_button.dart';
 import 'package:test/pages/sinister/page_sinister.dart';
 import 'package:test/widgets/gradient_back.dart';
@@ -45,6 +47,13 @@ class _PageTwoState extends State<PageTwo> {
             case InsurancePage:
               Navigator.push(context, MaterialPageRoute(builder: (ctx) => PageInsurance(theme: widget.theme)));
               break;
+
+            case LogoutDone:
+              final resp = state as LogoutDone;
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => PageOne(theme: widget.theme)));
+              
+           
+              break; 
           }
         },
         child: BlocBuilder<BasicBloc, BasicState>(
@@ -52,7 +61,22 @@ class _PageTwoState extends State<PageTwo> {
             return Scaffold(
                 appBar: AppBar(
                   backgroundColor: Theme.of(context).primaryColor,
-                  title: const Text('Bienvenido'),
+                  title: Row(
+                    children: [
+                      const Text('Bienvenido'),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: (){
+                          BlocProvider.of<BasicBloc>(context).add(LogOut());
+                      },
+                        icon: const Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                            size: 30,
+                      ))
+
+                    ],
+                  ),
                 ),
                 body: Stack(
                   children: [

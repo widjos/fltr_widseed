@@ -38,6 +38,12 @@ class LoginBegin extends BasicEvent {
   List<Object?> get props => [email, pass];
 }
 
+class LogOut extends BasicEvent {
+
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
 class LoginSpring extends BasicEvent {
   final String email;
   final String pass;
@@ -47,6 +53,17 @@ class LoginSpring extends BasicEvent {
   @override
   List<Object?> get props => [email, pass];
 }
+
+class LoginDb extends BasicEvent {
+  final String email;
+  final String pass;
+
+  LoginDb({required this.email, required this.pass});
+
+  @override
+  List<Object?> get props => [email, pass];
+}
+
 
 class EmailInvalid extends BasicEvent {
   @override
