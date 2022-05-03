@@ -35,6 +35,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool switchValue = false;
   ThemeProvider themeProvider = ThemeProvider();
+  
 
   void getCurrentTheme() async {
     DatabaseReference refInit =
@@ -53,6 +54,7 @@ class _MyAppState extends State<MyApp> {
     await _initializeC();
     await _initializeRC();
     await _initializeCM();
+    
     //await _deleteDb();
     //await SinisterProvider.shared.initSinistroTable();
     //await ClientProvider.shared.initClientDb();

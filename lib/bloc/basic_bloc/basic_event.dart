@@ -54,6 +54,39 @@ class LoginSpring extends BasicEvent {
   List<Object?> get props => [email, pass];
 }
 
+class AuthFingerPrint extends BasicEvent {
+    static final _auth = LocalAuthentication();
+
+    Future<bool> authenticate() async {
+    final isAvalible = await hasBiometrics();
+    if (!isAvalible) return false;
+    try {
+      return await _auth.authenticate(
+        localizedReason: 'Escaner de la huella dactilar',
+        options: const AuthenticationOptions(
+            useErrorDialogs: true, stickyAuth: true, biometricOnly: true),
+      );
+    } on PlatformException catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+
+    static Future<bool> hasBiometrics() async {
+    try {
+      return await _auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+
+}
+
 class LoginDb extends BasicEvent {
   final String email;
   final String pass;

@@ -43,5 +43,10 @@ class SinisterProvider {
    print(await SinisterRepository.shared.showTable(table: 'siniestro'));
 
   }
+
+
+    Future<dynamic> DeleteTable() async{
+    return SinisterRepository.shared.delete(tableName: 'siniestro');
+  }
 }
 

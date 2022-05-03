@@ -51,4 +51,8 @@ class ClientProvider {
         whereClause: 'cliente.email = ? and cliente.password = ?',
         whereArgs: [email, pass]);
   }
+
+  Future<dynamic> DeleteTable() async{
+    return ClienteRepository.shared.delete(tableName: 'cliente');
+  }
 }

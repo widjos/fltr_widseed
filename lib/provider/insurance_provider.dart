@@ -30,4 +30,8 @@ class InsuranceProvider {
     return InsuranceRepository.shared.updateRow(tableName: 'seguro', row: row, whereClause: 'seguro.id = ?', whereArgs: [idRow]);
   }
 
+    Future<dynamic> DeleteTable() async{
+    return InsuranceRepository.shared.delete(tableName: 'seguro');
+  }
+
 }

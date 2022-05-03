@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:encrypt/encrypt.dart' as myEncript;
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:test/pages/page_two/page_two.dart';
 import 'package:test/provider/client_provider.dart';
 import 'package:test/provider/insurance_provider.dart';
 import 'package:test/provider/sinister_provider.dart';
+import 'package:test/repository/master_repository.dart';
 import 'package:test/repository/sinister_repository.dart';
 import 'package:test/widgets/button_icon.dart';
 import 'package:test/widgets/gradient_back.dart';
@@ -36,10 +39,29 @@ class _PageOneState extends State<PageOne> {
   final _textControllerPassword = TextEditingController();
   static final _auth = LocalAuthentication();
   bool rememberMe = false;
+  late SharedPreferences prefs;
+  final key = myEncript.Key.fromBase64('my32lengthsupersecretnooneknows1');
+
+  @override
+  void initState() {
+    _initPrefs();
+    super.initState();
+  }
+
+  Future<void> _initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+
+    _textControllerUserName.text = prefs.getString('email') ?? '';
+    rememberMe = prefs.getBool('remember') ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
     FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+    final key = myEncript.Key.fromUtf8('my 32 length key................');
+    final iv = myEncript.IV.fromLength(16);
+
+    final encrypter = myEncript.Encrypter(myEncript.AES(key, padding: null));
 
     return BlocProvider(
         create: (BuildContext context) => BasicBloc(),
@@ -142,7 +164,21 @@ class _PageOneState extends State<PageOne> {
                                             fontFamily: "Lato",
                                             color: Colors.blueGrey,
                                             fontWeight: FontWeight.bold),
-                                      )
+                                      ),
+                                      ButtonGreen('Olvidar', () async {
+                                        var prefs = await SharedPreferences
+                                            .getInstance();
+                                        if (prefs.containsKey('email') &&
+                                            prefs.containsKey('pass')) {
+                                            prefs.remove('email');
+                                            prefs.remove('pass');
+                                          _textControllerUserName.text = '';
+                                          _textControllerPassword.text = '';
+                                          prefs.setBool('remember', false);
+                                          
+                                          print("olvido sus credenciales");
+                                        }
+                                      }, 80, 40)
                                     ],
                                   )),
                               widget.connected
@@ -150,15 +186,41 @@ class _PageOneState extends State<PageOne> {
                                       width: 70,
                                       child: ButtonGreen('Ingresar Online',
                                           () async {
-                                        if (_textControllerUserName
+                                        var prefs = await SharedPreferences
+                                            .getInstance();
+                                        if (prefs.getString('email') != null &&
+                                            prefs.getString('pass') != null) {
+                                          setState(() {
+                                            _textControllerUserName.text =
+                                                prefs.getString('email') ?? '';
+                                          });
+
+                                          final isAutho = await authenticate();
+                                          if (isAutho) {
+                                            final passB64 =
+                                                prefs.getString('pass') ?? '';
+                                                final bytesPass =   (encrypter.decryptBytes(
+                                                  myEncript.Encrypted.fromBase64(passB64) ,iv: iv));
+                                          
+
+                                            final valueStr = utf8.decode(bytesPass);
+                                           _textControllerPassword.text = valueStr;  
+                                           
+                                            BlocProvider.of<BasicBloc>(context)
+                                                .add(LoginSpring(
+                                                    email:
+                                                        _textControllerUserName
+                                                            .text,
+                                                    pass:
+                                                        _textControllerPassword
+                                                            .text));
+                                          }
+                                        } else if (_textControllerUserName
                                                 .text.isNotEmpty &&
                                             _textControllerPassword
                                                 .text.isNotEmpty) {
                                           if (emailValid(
                                               _textControllerUserName.text)) {
-                                            final prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
                                             /*  BlocProvider.of<BasicBloc>(context)
                                                 .add(LoginSpring(
                                                     email:
@@ -167,42 +229,26 @@ class _PageOneState extends State<PageOne> {
                                                     pass:
                                                         _textControllerPassword
                                                             .text)); */
-                                            if (prefs.getString('email') !=
-                                                    null ) {
-                                                        _textControllerUserName.text = prefs.getString('email') ?? '';
-                                                                                                                _textControllerUserName.text = prefs.getString('email') ?? '';
-                                                           
-                                                      final isAutho = await authenticate();
-                                                      if (isAutho){
-                                                      _textControllerPassword.text = prefs.getString('pass') ?? ''; 
-                                                       BlocProvider.of<BasicBloc>(context)
-                                                .add(LoginSpring(
-                                                    email:
-                                                        _textControllerUserName
-                                                            .text,
-                                                    pass:
-                                                        _textControllerPassword
-                                                            .text));  
-                                                      }
-                                            } else {
-                                              if (rememberMe) {
-                                                prefs.setString(
-                                                    'email',
-                                                    _textControllerUserName
-                                                        .text);
-                                                prefs.setString(
-                                                    'pass',
-                                                    _textControllerPassword
-                                                        .text);
-                                                BlocProvider.of<BasicBloc>(context)
-                                                .add(LoginSpring(
-                                                    email:
-                                                        _textControllerUserName
-                                                            .text,
-                                                    pass:
-                                                        _textControllerPassword
-                                                            .text));         
-                                              }
+
+                                            if (rememberMe) {
+                                              final pass =
+                                                  _textControllerPassword.text;
+                                              prefs.setString('email',
+                                                  _textControllerUserName.text);
+                                              prefs.setString(
+                                                  'pass',
+                                               encrypter.encrypt(pass, iv: iv).base64); 
+                                              prefs.setBool(
+                                                  'remember', rememberMe);
+                                              BlocProvider.of<BasicBloc>(
+                                                      context)
+                                                  .add(LoginSpring(
+                                                      email:
+                                                          _textControllerUserName
+                                                              .text,
+                                                      pass:
+                                                          _textControllerPassword
+                                                              .text));
                                             }
                                           } else {
                                             BlocProvider.of<BasicBloc>(context)
@@ -261,7 +307,9 @@ class _PageOneState extends State<PageOne> {
 
   void checkDataConfiguration(bool connected) async {
     if (connected) {
-      // await  _deleteDb();
+      await SinisterProvider.shared.DeleteTable();
+      await ClientProvider.shared.DeleteTable();
+      await InsuranceProvider.shared.DeleteTable();
       await SinisterProvider.shared.initSinistroTable();
       await ClientProvider.shared.initClientDb();
       await InsuranceProvider.shared.initInsuranceDb();

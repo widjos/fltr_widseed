@@ -52,7 +52,7 @@ class ApiManager {
 
   
     if((response.statusCode == 200 || response.statusCode== 202 ) ) {
-      return json.decode(response.body);
+      return jsonDecode(utf8.decode(response.bodyBytes));
      /* final body;
       if(type == HttpType.GET){
         body  = json.decode(response.body);

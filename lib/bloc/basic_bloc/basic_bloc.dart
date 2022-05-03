@@ -4,7 +4,10 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/provider/client_provider.dart';
 import 'package:test/repository/cliente_repository.dart';
 
@@ -14,6 +17,9 @@ part 'basic_event.dart';
 
 class BasicBloc extends Bloc<BasicEvent, BasicState> {
   BasicBloc() : super(AppStarted()) {
+
+   
+
     on<ButtonPressed>((event, emit) {
       emit(PageChanged(title: "Hola Mundo"));
     });
@@ -24,6 +30,12 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
           ? emit(LoginDone(email: event.email, pass: event.pass))
           : emit(WrongCredentials());
     }));
+
+    on<AuthFingerPrint>((event, emit) async {
+           final isAutho = await event.authenticate();
+           SharedPreferences prefs = await SharedPreferences.getInstance();
+          
+    });
 
     on<LoginSpring>((event, emit) async {
       var url = Uri.http("10.0.2.2:9595", "/cliente/buscar/email/password",
