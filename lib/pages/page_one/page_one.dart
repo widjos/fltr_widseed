@@ -16,6 +16,8 @@ import 'package:test/provider/insurance_provider.dart';
 import 'package:test/provider/sinister_provider.dart';
 import 'package:test/repository/master_repository.dart';
 import 'package:test/repository/sinister_repository.dart';
+import 'package:test/util/encriptor.dart';
+import 'package:test/widgets/alert_icon.dart';
 import 'package:test/widgets/button_icon.dart';
 import 'package:test/widgets/gradient_back.dart';
 import 'package:test/widgets/text_input.dart' as myInput;
@@ -37,8 +39,9 @@ class PageOne extends StatefulWidget {
 class _PageOneState extends State<PageOne> {
   final _textControllerUserName = TextEditingController();
   final _textControllerPassword = TextEditingController();
-  static final _auth = LocalAuthentication();
+  final _auth = LocalAuthentication();
   bool rememberMe = false;
+  String _mensaje = "No autorizado";
   late SharedPreferences prefs;
   final key = myEncript.Key.fromBase64('my32lengthsupersecretnooneknows1');
 
@@ -81,14 +84,19 @@ class _PageOneState extends State<PageOne> {
 
               case WrongCredentials:
                 final estado = state as WrongCredentials;
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("usuario o password incorrecto")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("usuario o password incorrecto")));
                 break;
 
               case EmailNotValid:
                 final estado = state as EmailNotValid;
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Ingrese un correo valido")));
+                    const SnackBar(content: Text("Ingrese un correo valido")));
+                break;
+
+              case AuthLocalError:
+                final authError = state as AuthLocalError;
+                showUpDialog(context, authError.mensaje);
                 break;
             }
           },
@@ -165,20 +173,22 @@ class _PageOneState extends State<PageOne> {
                                             color: Colors.blueGrey,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      ButtonGreen('Olvidar', () async {
-                                        var prefs = await SharedPreferences
-                                            .getInstance();
-                                        if (prefs.containsKey('email') &&
-                                            prefs.containsKey('pass')) {
+                                      Container(
+                                        child: ButtonGreen('Olvidar', () async {
+                                          var prefs = await SharedPreferences
+                                              .getInstance();
+                                          if (prefs.containsKey('email') &&
+                                              prefs.containsKey('pass')) {
                                             prefs.remove('email');
                                             prefs.remove('pass');
-                                          _textControllerUserName.text = '';
-                                          _textControllerPassword.text = '';
-                                          prefs.setBool('remember', false);
-                                          
-                                          print("olvido sus credenciales");
-                                        }
-                                      }, 80, 40)
+                                            _textControllerUserName.text = '';
+                                            _textControllerPassword.text = '';
+                                            prefs.setBool('remember', false);
+
+                                            print("olvido sus credenciales");
+                                          }
+                                        }, 80, 40),
+                                      )
                                     ],
                                   )),
                               widget.connected
@@ -186,7 +196,9 @@ class _PageOneState extends State<PageOne> {
                                       width: 70,
                                       child: ButtonGreen('Ingresar Online',
                                           () async {
-                                        var prefs = await SharedPreferences
+                                        final isAuth = await authenticate();
+                                        if (isAuth) {
+                                           var prefs = await SharedPreferences
                                             .getInstance();
                                         if (prefs.getString('email') != null &&
                                             prefs.getString('pass') != null) {
@@ -199,13 +211,17 @@ class _PageOneState extends State<PageOne> {
                                           if (isAutho) {
                                             final passB64 =
                                                 prefs.getString('pass') ?? '';
-                                                final bytesPass =   (encrypter.decryptBytes(
+
+                                               final valueStr = await Encriptor.shared.desencriptar(passB64);
+                                               _textControllerPassword.text = valueStr;
+                                                
+                                               /* final bytesPass =   (encrypter.decryptBytes(
                                                   myEncript.Encrypted.fromBase64(passB64) ,iv: iv));
                                           
 
                                             final valueStr = utf8.decode(bytesPass);
-                                           _textControllerPassword.text = valueStr;  
-                                           
+                                             
+                                           */
                                             BlocProvider.of<BasicBloc>(context)
                                                 .add(LoginSpring(
                                                     email:
@@ -215,37 +231,19 @@ class _PageOneState extends State<PageOne> {
                                                         _textControllerPassword
                                                             .text));
                                           }
-                                        } else if (_textControllerUserName
-                                                .text.isNotEmpty &&
-                                            _textControllerPassword
-                                                .text.isNotEmpty) {
+                                        } else if (_textControllerUserName.text.isNotEmpty &&
+                                            _textControllerPassword.text.isNotEmpty) {
                                           if (emailValid(
                                               _textControllerUserName.text)) {
-                                            /*  BlocProvider.of<BasicBloc>(context)
-                                                .add(LoginSpring(
-                                                    email:
-                                                        _textControllerUserName
-                                                            .text,
-                                                    pass:
-                                                        _textControllerPassword
-                                                            .text)); */
-
                                             if (rememberMe) {
-                                              final pass =
-                                                  _textControllerPassword.text;
-                                              prefs.setString('email',
-                                                  _textControllerUserName.text);
-                                              prefs.setString(
-                                                  'pass',
-                                               encrypter.encrypt(pass, iv: iv).base64); 
-                                              prefs.setBool(
-                                                  'remember', rememberMe);
-                                              BlocProvider.of<BasicBloc>(
-                                                      context)
+                                              final pass = _textControllerPassword.text;
+                                              prefs.setString('email', _textControllerUserName.text);
+                                              prefs.setString('pass',await Encriptor.shared.encriptar(pass)); 
+                                              prefs.setBool('remember', rememberMe);
+                                              
+                                              BlocProvider.of<BasicBloc>(context)
                                                   .add(LoginSpring(
-                                                      email:
-                                                          _textControllerUserName
-                                                              .text,
+                                                      email:_textControllerUserName.text,
                                                       pass:
                                                           _textControllerPassword
                                                               .text));
@@ -255,6 +253,13 @@ class _PageOneState extends State<PageOne> {
                                                 .add(EmailInvalid());
                                           }
                                         }
+                                        } else {
+                                       
+                                          BlocProvider.of<BasicBloc>(context)
+                                              .add(ShowMensaje(
+                                                  mensaje: _mensaje));
+                                        }
+                                     
                                       }, 300.0, 50.0))
                                   : Container(
                                       width: 70,
@@ -280,15 +285,22 @@ class _PageOneState extends State<PageOne> {
                                           }
                                         }
                                       }, 300.0, 50.0)),
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                child: Row(children: [
+                                  widget.connected
+                                      ? ButtonIcon(true, Icons.wifi, 20,
+                                          Theme.of(context).primaryColor, () {})
+                                      : ButtonIcon(
+                                          true,
+                                          Icons.wifi_off,
+                                          20,
+                                          Theme.of(context).primaryColor,
+                                          () {}),
+                                ]),
+                              )
                             ],
                           )),
-                      Container(
-                          alignment: Alignment.bottomCenter,
-                          child: widget.connected
-                              ? ButtonIcon(true, Icons.wifi, 20,
-                                  Theme.of(context).primaryColor, () {})
-                              : ButtonIcon(true, Icons.wifi_off, 20,
-                                  Theme.of(context).primaryColor, () {}))
                     ],
                   );
                 }),
@@ -346,20 +358,65 @@ class _PageOneState extends State<PageOne> {
             useErrorDialogs: true, stickyAuth: true, biometricOnly: true),
       );
     } on PlatformException catch (e) {
+      setState(() {
+        switch (e.code) {
+          case 'NotAvailable':
+            _mensaje = 'No tiene registrado ningun metodo biometrico';
+            break;
+          case 'PasscodeNotSet':
+            _mensaje = 'Aun no configura un passcode en (iOS) o PIN/pattern/password (Android) en el dispositivo.';
+            break;
+          case 'NotEnrolled':
+            _mensaje = 'No tiene almacenada ninguna huella dactilar';
+            break;
+          case 'LockedOut ':
+            _mensaje = 'A agotado sus 5 intentos ahora tiene que esperar almenos 30 segundos para volver a intentar';
+            break;
+          case 'OtherOperatingSystem ':
+            _mensaje = 'Su sitema operativo no es soportado';
+            break;
+          case 'PermanentlyLockedOut':
+            _mensaje = 'El sensor se ha bloqueado por muchos intentos fallidos se requiere una verificacion mas estricta con PIN/Pattern/Password';
+            break;
+            
+        }
+      });
+
+      print(e.message);
+
+      return false;
+    }
+  }
+
+  Future<bool> hasBiometrics() async {
+    try {
+      return await _auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
       print(e);
       return false;
     }
   }
 
-  static Future<bool> hasBiometrics() async {
-    try {
-      return await _auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
-      return false;
-    }
+  void showUpDialog(BuildContext context, String mensaje) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error Authenticacion'),
+            content: Expanded(
+              child: Text(mensaje),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Ok'))
+            ],
+          );
+        });
   }
 }
-
 
 /**                                        
                                          

@@ -53,6 +53,10 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
       }
     });
 
+    on<ShowMensaje>(((event, emit) {
+      emit(AuthLocalError(mensaje: event.mensaje));
+    }));
+
    on<LoginDb>((event, emit) async  {
      print(await ClienteRepository.shared.showTable(table: 'cliente')); 
      dynamic result = await ClientProvider.shared.logInDb(event.email, event.pass);

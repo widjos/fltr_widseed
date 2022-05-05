@@ -34,6 +34,13 @@ class LogoutDone extends BasicState{
   LogoutDone({required this.code});
 }
 
+class AuthLocalError extends BasicState{
+
+  final String mensaje;
+
+  AuthLocalError({required this.mensaje});
+}
+
 class WrongCredentials extends BasicState{}
 
 class EmailNotValid extends BasicState{}

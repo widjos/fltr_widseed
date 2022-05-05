@@ -38,6 +38,16 @@ class LoginBegin extends BasicEvent {
   List<Object?> get props => [email, pass];
 }
 
+class ShowMensaje extends BasicEvent{
+  final String mensaje;
+
+ShowMensaje({required this.mensaje});
+  @override
+  // TODO: implement props
+  List<Object?> get props =>[mensaje];
+  
+}
+
 class LogOut extends BasicEvent {
 
   @override
