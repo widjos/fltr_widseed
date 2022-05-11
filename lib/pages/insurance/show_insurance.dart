@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test/model/insurance/insurance_list.dart';
+import 'package:test/prefs/localization.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/util/app_strings.dart';
 
 class ShowInsurance extends StatelessWidget {
   
@@ -9,8 +13,11 @@ class ShowInsurance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
     return AlertDialog(
-      title: const Text('Informacio'),
+      title:  Text(localization.dictionary(LabelsText.information)),
       content: Form(
         child: Container(
           height: 400,
@@ -18,29 +25,29 @@ class ShowInsurance extends StatelessWidget {
           child: ListView(
             children: [
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Fecha Inicio")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.seguroDateInit))
                     ),
                  enabled: false,   
                  initialValue: seguro.fechaInicio, 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Fecha Final")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.seguroDateFinish))
                     ),
                  enabled: false,   
                  initialValue: seguro.fechaVencimiento, 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Ramo")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.seguroRamo))
                     ),
                  enabled: false,   
                  initialValue: seguro.ramo, 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Cliente Dni")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.seguroClientDni))
                     ),
                  enabled: false,   
                  initialValue: seguro.dniCl.toString(), 

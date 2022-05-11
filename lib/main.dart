@@ -7,15 +7,17 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:test/pages/page_one/page_one.dart';
+import 'package:test/pages/page_settings/page_settings.dart';
+import 'package:test/prefs/localization.dart';
 import 'package:test/prefs/style.dart';
 import 'package:test/prefs/theme_provider.dart';
-import 'package:test/provider/client_provider.dart';
-import 'package:test/provider/insurance_provider.dart';
-import 'package:test/provider/sinister_provider.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/prefs/localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool switchValue = false;
   ThemeProvider themeProvider = ThemeProvider();
+  ThemeProvider themeChangeProvider = ThemeProvider();
+  LanguageProvider langProvider = LanguageProvider();
   
 
   void getCurrentTheme() async {
@@ -43,6 +47,7 @@ class _MyAppState extends State<MyApp> {
     refInit.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       themeProvider.darkTheme = data as bool;
+      switchValue = themeProvider.darkTheme;
     });
     //themeProvider.darkTheme = await themeProvider.preference.getTheme();
   }
@@ -54,6 +59,8 @@ class _MyAppState extends State<MyApp> {
     await _initializeC();
     await _initializeRC();
     await _initializeCM();
+    getCurrentTheme();
+    await getCurrentLanguaje();
     
     //await _deleteDb();
     //await SinisterProvider.shared.initSinistroTable();
@@ -93,31 +100,80 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  
+  Future<void> getCurrentLanguaje() async {
+    langProvider.setLaguaje = await langProvider.getDefaultLanguage();
+  }
+
   @override
   void initState() {
-    getCurrentTheme();
     super.initState();
     _firebase = _initializeFB();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => themeProvider,
-        child: Consumer<ThemeProvider>(builder: ((context, value, child) {
-          return FutureBuilder(
-              future: _firebase,
-              builder: ((context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return MaterialApp(
-                    title: 'Flutter Demo',
-                    theme: Style.themeData(themeProvider.darkTheme),
-                    home: Scaffold(
+    return FutureBuilder(
+      future: _firebase,
+      builder: ((context,snapshot){
+          if(snapshot.connectionState ==ConnectionState.done){
+            return  MultiProvider(
+      providers: [
+          ChangeNotifierProvider.value(value: themeProvider),
+          ChangeNotifierProvider(create: (_) => LanguageProvider())
+        ],
+        child: Consumer2(
+          builder: (context, ThemeProvider themeProvider, LanguageProvider _languajeProvider, widget){
+            return MaterialApp(
+              locale: _languajeProvider.getLang,
+              localizationsDelegates:  const[
+                AppLocalizationDelegate(),
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const[
+                Locale('es',''),
+                Locale('en',''),
+              ],
+              theme: Style.themeData(themeProvider.darkTheme),
+              debugShowCheckedModeBanner: false,
+              title: 'MySeedFlutter',
+              home: PageOne(theme: switchValue)
+            );
+          }
+          ),
+      );
+          }else{
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        })
+      );
+  }
+}
+
+/**             Scaffold(
                         appBar: AppBar(
                           backgroundColor: themeProvider.darkTheme
                               ? Colors.black
                               : Colors.green[700],
-                          title: Text('Bienvenido'),
+                          title: Row(
+                            children: [
+                               const Text('Bienvenido'),
+                              const Spacer(),
+                               IconButton(
+                            onPressed: () {
+                               Navigator.push(context, MaterialPageRoute(builder: (ctx) => const PageSettings()));
+                            },
+                            icon: const Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                              size: 30,
+                            )) 
+                            ],
+                          ),
                         ),
                         body: Stack(
                           children: [
@@ -139,14 +195,4 @@ class _MyAppState extends State<MyApp> {
                                       });
                                     })),
                           ],
-                        )),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }));
-        })));
-  }
-}
+                        )), */

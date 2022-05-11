@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test/model/sinister/sinister_list.dart';
+import 'package:test/prefs/localization.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/util/app_strings.dart';
 
 class ShowSinister extends StatelessWidget {
   
@@ -9,8 +13,12 @@ class ShowSinister extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
+
     return AlertDialog(
-      title:  const Text('Informacion'),
+      title:   Text(localization.dictionary(LabelsText.information)),
       content: Form(
         child: Container(
           height: 400,
@@ -18,29 +26,29 @@ class ShowSinister extends StatelessWidget {
           child: ListView(
             children: [
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Fecha")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.sinisterDate))
                     ),
                  enabled: false,   
                  initialValue: siniestro.fechaSiniestro, 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Numero Poliza")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.sinisterNumber))
                     ),
                  enabled: false,   
                  initialValue: siniestro.numeroPoliza.toString(), 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Indenmizacion")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.sinisterImmission))
                     ),
                  enabled: false,   
                  initialValue: siniestro.indenmizacion, 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("causas")
+                decoration: InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.sinisterCouses))
                     ),
                  enabled: false,   
                  initialValue: siniestro.causas, 

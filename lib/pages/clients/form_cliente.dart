@@ -1,7 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test/model/client/client_list.dart';
+import 'package:test/prefs/localization.dart';
 import 'package:test/provider/client_provider.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/util/app_strings.dart';
 
 class FormClient extends StatefulWidget {
   VoidCallback llamada;
@@ -25,11 +29,14 @@ class FormClient extends StatefulWidget {
 }
 
 class _FormClientState extends State<FormClient> {
+
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
     final _formKey = GlobalKey<FormState>();
     return AlertDialog(
-      title: const Text('Nuevo Cliente'),
+      title:  Text(localization.dictionary(LabelsText.clientNew)),
       content: Form(
         key: _formKey,
         child: Container(
@@ -38,16 +45,16 @@ class _FormClientState extends State<FormClient> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Nombre")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientName))),
                 controller: widget.nombreController,
                 validator: (value) =>
                     value == null || value.isEmpty ? 'ingrese su nombre' : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("password"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.clientPass)),
                 ),
                 controller: widget.passController,
                 validator: (value) => value == null || value.isEmpty
@@ -55,16 +62,16 @@ class _FormClientState extends State<FormClient> {
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("email")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientEmail))),
                 controller: widget.emailController,
                 validator: (value) =>
                     value == null || value.isEmpty ? 'ingrese su email' : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("apellido1"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.clientLastName1)),
                 ),
                 controller: widget.apellido1Controller,
                 validator: (value) => value == null || value.isEmpty
@@ -72,35 +79,35 @@ class _FormClientState extends State<FormClient> {
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("apellido2"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.clientLastName2)),
                 ),
                 controller: widget.apellido2Controller,
                 validator: (value) => value == null || value.isEmpty
-                    ? 'ingrese su apellido1'
+                    ? 'ingrese su apellido2'
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("clase Via")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientClassVia))),
                 controller: widget.claseViaController,
                 validator: (value) => value == null || value.isEmpty
                     ? 'ingrese su clasevia'
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("nombre Via")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientNameVia))),
                 controller: widget.nombreViaController,
                 validator: (value) => value == null || value.isEmpty
                     ? 'ingrese su nombrevia'
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("numero VIa"),
+                decoration:  InputDecoration(
+                  border:  const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.clientNumberVia)),
                 ),
                 controller: widget.numeroViaController,
                 validator: (value) => value == null || value.isEmpty
@@ -108,9 +115,9 @@ class _FormClientState extends State<FormClient> {
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("Cod Postal"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.clientCodPostal)),
                 ),
                 controller: widget.condPostalController,
                 validator: (value) => value == null || value.isEmpty
@@ -118,16 +125,16 @@ class _FormClientState extends State<FormClient> {
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Ciudad")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientCity))),
                 controller: widget.ciudadController,
                 validator: (value) =>
                     value == null || value.isEmpty ? 'ingrese su ciudad' : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("telefono"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.clientTel)),
                 ),
                 controller: widget.telefonoController,
                 validator: (value) => value == null || value.isEmpty
@@ -135,9 +142,9 @@ class _FormClientState extends State<FormClient> {
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("obsr"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.clientObservation)),
                 ),
                 controller: widget.observController,
                 validator: (value) => value == null || value.isEmpty
@@ -173,11 +180,11 @@ class _FormClientState extends State<FormClient> {
                     ClientProvider.shared.saveClientDb([clientTemp]);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Vlidar form primer')));
+                     SnackBar(content: Text(localization.dictionary(LabelsText.formValidation))));
               }
             },
-            child: const Text("Registrar")),
-        TextButton(onPressed: widget.llamada, child: const Text('Salir'))
+            child:  Text(localization.dictionary(LabelsText.formRegister))),
+        TextButton(onPressed: widget.llamada, child:  Text(localization.dictionary(LabelsText.formBack)))
       ],
     );
   }

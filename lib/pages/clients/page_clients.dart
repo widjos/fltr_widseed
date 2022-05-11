@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:test/bloc/basic_bloc/basic_bloc.dart';
 import 'package:test/bloc/client_bloc/client_bloc.dart';
 import 'package:test/model/client/client_list.dart';
 import 'package:test/pages/clients/form_cliente.dart';
 import 'package:test/pages/clients/show_client.dart';
+import 'package:test/prefs/localization.dart';
 import 'package:test/provider/client_provider.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/util/app_strings.dart';
 
 import 'package:test/widgets/button_icon.dart';
 import 'package:test/widgets/gradient_back.dart';
@@ -43,6 +47,8 @@ class _PageClientsState extends State<PageClients> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
     return BlocProvider(
       create: (BuildContext context) => ClientBloc(),
       child: BlocListener<ClientBloc, ClientState>(
@@ -53,7 +59,7 @@ class _PageClientsState extends State<PageClients> {
             case DeletionDone:
               final user = state as DeletionDone;
               ScaffoldMessenger.of(context).showSnackBar(
-                   SnackBar(content: Text('Se elimino un cliente con id = ${user.idClient}')));
+                   SnackBar(content: Text('${localization.dictionary(LabelsText.clientDeleteRegister)} = ${user.idClient}')));
               break;
           }
         },
@@ -66,7 +72,7 @@ class _PageClientsState extends State<PageClients> {
                     backgroundColor: Theme.of(context).primaryColor,
                     title: Row(
                       children: [
-                        const Text('Clientes'),
+                        Text(localization.dictionary(LabelsText.clientTittle)),
                         const Spacer(),
                         IconButton(
                             onPressed: () {
@@ -77,9 +83,8 @@ class _PageClientsState extends State<PageClients> {
                                       _getData();
                                       Navigator.pop(context);
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  'Nuevo usuario registrado')));
+                                          .showSnackBar( SnackBar(
+                                              content: Text(localization.dictionary(LabelsText.clientNewRegister))));
                                     });
                                   });
                             },
@@ -123,7 +128,7 @@ class _PageClientsState extends State<PageClients> {
                                         title: RowData(
                                           idData1: 'Id:',
                                           valueData1: list[index].id.toString(),
-                                          idData2: 'email:',
+                                          idData2: localization.dictionary(LabelsText.clientEmail),
                                           valueData2: list[index].email,
                                         ),
                                         iconColor: Theme.of(context)

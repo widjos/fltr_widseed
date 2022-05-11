@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:test/provider/api_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:test/prefs/localization.dart';
 import 'package:test/provider/insurance_provider.dart';
-import 'package:test/util/app_type.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/util/app_strings.dart';
+
 
 class FormInsurance extends StatefulWidget {
   //VoidCallback llamada;
@@ -35,6 +38,10 @@ class FormInsurance extends StatefulWidget {
 class _FormInsuranceState extends State<FormInsurance> {
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
+
     TextEditingController numPolizaCtrl =
         TextEditingController(text: widget.numPoliza.toString());
     TextEditingController ramoCtrl =
@@ -51,7 +58,7 @@ class _FormInsuranceState extends State<FormInsurance> {
         TextEditingController(text: widget.dniCl.toString());
     final _formKey = GlobalKey<FormState>();
     return AlertDialog(
-      title: const Text('Modificar Seguro'),
+      title:  Text(localization.dictionary(LabelsText.seguroModificar)),
       content: Form(
         key: _formKey,
         child: Container(
@@ -61,35 +68,35 @@ class _FormInsuranceState extends State<FormInsurance> {
             children: [
               TextFormField(
                 enabled: false,
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Nombre")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.seguroNoPoliza))),
                 controller: numPolizaCtrl,
                 validator: (value) => value == null || value.isEmpty
                     ? 'ingrese el numero  de la poliza'
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("Ramo"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.seguroRamo)),
                 ),
                 controller: ramoCtrl,
                 validator: (value) =>
                     value == null || value.isEmpty ? 'ingrese el ramo' : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    label: Text("Fecha inicio")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    label: Text(localization.dictionary(LabelsText.seguroDateInit))),
                 controller: fechaInicioCtrl,
                 validator: (value) => value == null || value.isEmpty
                     ? 'ingrese la fecha de inicio'
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("fecha Vencimiento"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.seguroDateFinish)),
                 ),
                 controller: fechaVenCtrl,
                 validator: (value) => value == null || value.isEmpty
@@ -97,9 +104,9 @@ class _FormInsuranceState extends State<FormInsurance> {
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  label: Text("Condiciones"),
+                decoration:  InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  label: Text(localization.dictionary(LabelsText.seguroConditions)),
                 ),
                 controller: condPartCtrl,
                 validator: (value) => value == null || value.isEmpty
@@ -107,17 +114,17 @@ class _FormInsuranceState extends State<FormInsurance> {
                     : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    label: Text("observaciones")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    label: Text(localization.dictionary(LabelsText.seguroObserv))),
                 controller: obsersavacionCtrl,
                 validator: (value) =>
                     value == null || value.isEmpty ? 'ingrese observa' : null,
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    label: Text("dniPropietario")),
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    label: Text(localization.dictionary(LabelsText.seguroClientDni))),
                 controller: dniClCtrl,
                 validator: (value) => value == null || value.isEmpty
                     ? 'ingrese su dniProp'
@@ -140,7 +147,7 @@ class _FormInsuranceState extends State<FormInsurance> {
                   "dniCl": int.parse(dniClCtrl.text)
                 }, int.parse(numPolizaCtrl.text));
                     ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Seguro actualizado')));
+                     SnackBar(content: Text(localization.dictionary(LabelsText.seguroActualizado))));
               
                 Navigator.pop(context);
 
@@ -148,7 +155,7 @@ class _FormInsuranceState extends State<FormInsurance> {
                 print('No se pudo actualizar su informacion');
               }
             },
-            child: const Text("Actualizar"))
+            child:  Text(localization.dictionary(LabelsText.seguroActualizar)))
       ],
     );
   }

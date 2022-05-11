@@ -1,23 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:encrypt/encrypt.dart' as myEncript;
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:test/bloc/basic_bloc/basic_bloc.dart';
+import 'package:test/pages/page_settings/page_settings.dart';
 import 'package:test/pages/page_two/page_two.dart';
+import 'package:test/prefs/localization.dart';
 import 'package:test/provider/client_provider.dart';
 import 'package:test/provider/insurance_provider.dart';
+import 'package:test/provider/language_provider.dart';
 import 'package:test/provider/sinister_provider.dart';
-import 'package:test/repository/master_repository.dart';
 import 'package:test/repository/sinister_repository.dart';
+import 'package:test/util/app_strings.dart';
 import 'package:test/util/encriptor.dart';
-import 'package:test/widgets/alert_icon.dart';
 import 'package:test/widgets/button_icon.dart';
 import 'package:test/widgets/gradient_back.dart';
 import 'package:test/widgets/text_input.dart' as myInput;
@@ -43,7 +45,7 @@ class _PageOneState extends State<PageOne> {
   bool rememberMe = false;
   String _mensaje = "No autorizado";
   late SharedPreferences prefs;
-  final key = myEncript.Key.fromBase64('my32lengthsupersecretnooneknows1');
+
 
   @override
   void initState() {
@@ -60,11 +62,9 @@ class _PageOneState extends State<PageOne> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
     FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-    final key = myEncript.Key.fromUtf8('my 32 length key................');
-    final iv = myEncript.IV.fromLength(16);
-
-    final encrypter = myEncript.Encrypter(myEncript.AES(key, padding: null));
 
     return BlocProvider(
         create: (BuildContext context) => BasicBloc(),
@@ -84,19 +84,19 @@ class _PageOneState extends State<PageOne> {
 
               case WrongCredentials:
                 final estado = state as WrongCredentials;
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("usuario o password incorrecto")));
+                ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+                    content: Text(localization.dictionary(LabelsText.loginErrorEmailOrPass))));
                 break;
 
               case EmailNotValid:
                 final estado = state as EmailNotValid;
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Ingrese un correo valido")));
+                     SnackBar(content: Text(localization.dictionary(LabelsText.loginErrorEmailInvalid))));
                 break;
 
               case AuthLocalError:
                 final authError = state as AuthLocalError;
-                showUpDialog(context, authError.mensaje);
+                showUpDialog(context, authError.mensaje, localization.dictionary(LabelsText.loginErrorAuth));
                 break;
             }
           },
@@ -112,7 +112,26 @@ class _PageOneState extends State<PageOne> {
                     ConnectivityResult connectivity, Widget child) {
                   widget.connected = connectivity != ConnectivityResult.none;
                   checkDataConfiguration(widget.connected);
-                  return Stack(
+                  return Scaffold(
+                        appBar: AppBar(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          title: Row(
+                            children: [
+                               Text(localization.dictionary(LabelsText.homePageTittle)),
+                              const Spacer(),
+                               IconButton(
+                            onPressed: () {
+                               Navigator.push(context, MaterialPageRoute(builder: (ctx) => const PageSettings()));
+                            },
+                            icon: const Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                              size: 30,
+                            )) 
+                            ],
+                          ),
+                        ),
+                        body:  Stack(
                     children: [
                       GradientBack(tittle: 'Log In'),
                       Container(
@@ -123,9 +142,10 @@ class _PageOneState extends State<PageOne> {
                               Container(
                                 margin: const EdgeInsets.only(
                                     top: 20, bottom: 20, left: 20),
-                                child: const Text(
-                                  'Log In',
-                                  style: TextStyle(
+                                child:  Text(
+                                  localization.dictionary(LabelsText.clientEmail) 
+                                  ,
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),
@@ -142,7 +162,7 @@ class _PageOneState extends State<PageOne> {
                               Container(
                                 margin: const EdgeInsets.only(bottom: 20.0),
                                 child: myInput.TextInput(
-                                  hintText: 'Password',
+                                  hintText: localization.dictionary(LabelsText.clientPass),
                                   inputType: null,
                                   controller: _textControllerPassword,
                                   isPassword: true,
@@ -165,16 +185,13 @@ class _PageOneState extends State<PageOne> {
                                           });
                                         },
                                       ),
-                                      const Text(
-                                        'Recordar mis credenciales',
-                                        style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontFamily: "Lato",
-                                            color: Colors.blueGrey,
-                                            fontWeight: FontWeight.bold),
+                                       Text(
+                                        localization.dictionary(LabelsText.loginRememberMe)
+                                        ,
+                                        style:  Theme.of(context).textTheme.bodyText1,
                                       ),
                                       Container(
-                                        child: ButtonGreen('Olvidar', () async {
+                                        child: ButtonGreen(localization.dictionary(LabelsText.loginForget), () async {
                                           var prefs = await SharedPreferences
                                               .getInstance();
                                           if (prefs.containsKey('email') &&
@@ -194,7 +211,7 @@ class _PageOneState extends State<PageOne> {
                               widget.connected
                                   ? Container(
                                       width: 70,
-                                      child: ButtonGreen('Ingresar Online',
+                                      child: ButtonGreen(localization.dictionary(LabelsText.loginButtonOnline),
                                           () async {
                                         final isAuth = await authenticate();
                                         if (isAuth) {
@@ -214,14 +231,6 @@ class _PageOneState extends State<PageOne> {
 
                                                final valueStr = await Encriptor.shared.desencriptar(passB64);
                                                _textControllerPassword.text = valueStr;
-                                                
-                                               /* final bytesPass =   (encrypter.decryptBytes(
-                                                  myEncript.Encrypted.fromBase64(passB64) ,iv: iv));
-                                          
-
-                                            final valueStr = utf8.decode(bytesPass);
-                                             
-                                           */
                                             BlocProvider.of<BasicBloc>(context)
                                                 .add(LoginSpring(
                                                     email:
@@ -264,7 +273,7 @@ class _PageOneState extends State<PageOne> {
                                   : Container(
                                       width: 70,
                                       child:
-                                          ButtonGreen('Ingresar offLine', () {
+                                          ButtonGreen(localization.dictionary(LabelsText.loginButtonOffline), () {
                                         if (_textControllerUserName
                                                 .text.isNotEmpty &&
                                             _textControllerPassword
@@ -302,7 +311,8 @@ class _PageOneState extends State<PageOne> {
                             ],
                           )),
                     ],
-                  );
+                  )
+                        );
                 }),
                 child: Container(),
               ));
@@ -397,12 +407,12 @@ class _PageOneState extends State<PageOne> {
     }
   }
 
-  void showUpDialog(BuildContext context, String mensaje) {
+  void showUpDialog(BuildContext context, String mensaje, String title) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error Authenticacion'),
+            title:  Text(title),
             content: Expanded(
               child: Text(mensaje),
             ),
@@ -418,9 +428,3 @@ class _PageOneState extends State<PageOne> {
   }
 }
 
-/**                                        
-                                         
-                                         
-                                         
-
-*/

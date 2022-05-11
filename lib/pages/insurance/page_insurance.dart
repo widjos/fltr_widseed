@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:test/bloc/insurance_bloc/insurance_bloc.dart';
 import 'package:test/model/insurance/insurance_list.dart';
 import 'package:test/pages/insurance/form_insurance.dart';
 import 'package:test/pages/insurance/show_insurance.dart';
+import 'package:test/prefs/localization.dart';
 import 'package:test/provider/insurance_provider.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/util/app_strings.dart';
 import 'package:test/widgets/button_icon.dart';
 import 'package:test/widgets/row_data.dart';
 
@@ -38,6 +42,9 @@ class _PageInsuranceState extends State<PageInsurance> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
     return BlocProvider(
         create: (BuildContext context) => InsuranceBloc(),
         child: BlocListener<InsuranceBloc, InsuranceState>(
@@ -68,7 +75,7 @@ class _PageInsuranceState extends State<PageInsurance> {
           builder: (context, state) {
             return Scaffold(
                 appBar: AppBar(
-                    title: const Text('Seguros'),
+                    title:  Text(localization.dictionary(LabelsText.seguroTitle)),
                     backgroundColor: Theme.of(context).primaryColor),
                 body: FutureBuilder(
                   future: InsuranceProvider.shared.getAllDb(context),
@@ -99,9 +106,9 @@ class _PageInsuranceState extends State<PageInsurance> {
                                   children: [
                                     ExpansionTile(
                                       title: RowData(
-                                        idData1: 'Numero Poliza:',
+                                        idData1: localization.dictionary(LabelsText.seguroNoPoliza),
                                         valueData1: list[index].id.toString(),
-                                        idData2: 'Fecha Inicio:',
+                                        idData2: localization.dictionary(LabelsText.seguroDateInit),
                                         valueData2: list[index].fechaInicio,
                                       ),
                                       children: [

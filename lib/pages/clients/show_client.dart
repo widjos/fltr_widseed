@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test/model/client/client_list.dart';
+import 'package:test/prefs/localization.dart';
+import 'package:test/provider/language_provider.dart';
+import 'package:test/util/app_strings.dart';
 
 class ShowClient extends StatelessWidget {
 
@@ -11,8 +15,11 @@ class ShowClient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
     return AlertDialog(
-      title: const Text('Información'),
+      title:  Text(localization.dictionary(LabelsText.information)),
       content: Form(
         child: Container(
           height: 400,
@@ -20,39 +27,39 @@ class ShowClient extends StatelessWidget {
           child: ListView(
             children: [
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Apellido1")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientLastName1))
                     ),
                  enabled: false,   
                  initialValue: cliente.apellido1, 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Apellido2")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientLastName2))
                     ),
                  enabled: false,   
                  initialValue: cliente.apellido2, 
 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Ciudad")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientCity))
                     ),
                  enabled: false,   
                  initialValue: cliente.ciudad, 
 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Clase Via")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientClassVia))
                     ),
                  enabled: false,   
                  initialValue: cliente.claseVia, 
 
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                    border: UnderlineInputBorder(), label: Text("Nombre Via")
+                decoration:  InputDecoration(
+                    border: const UnderlineInputBorder(), label: Text(localization.dictionary(LabelsText.clientNameVia))
                     ),
                  enabled: false,   
                  initialValue: cliente.nombreVia, 

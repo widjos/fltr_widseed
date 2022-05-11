@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:test/bloc/sinister_bloc/sinister_bloc.dart';
 import 'package:test/model/sinister/sinister_list.dart';
 import 'package:test/pages/sinister/form_delete_sinister.dart';
 import 'package:test/pages/sinister/show_sinister.dart';
+import 'package:test/prefs/localization.dart';
+import 'package:test/provider/language_provider.dart';
 import 'package:test/provider/sinister_provider.dart';
+import 'package:test/util/app_strings.dart';
 import 'package:test/widgets/button_icon.dart';
 import 'package:test/widgets/row_data.dart';
 
@@ -38,6 +42,10 @@ class _PageSinisterState extends State<PageSinister> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+    AppLocalizations localization = AppLocalizations(lang.getLang);
+    
+
     return BlocProvider(
       create: (BuildContext context) => SinisterBloc(),
       child: BlocListener<SinisterBloc, SinisterState>(
@@ -54,7 +62,7 @@ class _PageSinisterState extends State<PageSinister> {
                     return FormDeleteSinister(idSiniestro: sinister.idSinister);
                   }).then((value) => _refreshData());
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Siniestro eliminado!')));
+                   SnackBar(content: Text(localization.dictionary(LabelsText.sinisterDeleted))));
 
               break;
           }
@@ -65,7 +73,7 @@ class _PageSinisterState extends State<PageSinister> {
                 appBar: AppBar(
                   title: Row(
                     children: [
-                      const Text('Siniestro'),
+                      Text(localization.dictionary(LabelsText.sinisterTitle)),
                       const Spacer(),
                       IconButton(
                           onPressed: () {
@@ -114,7 +122,7 @@ class _PageSinisterState extends State<PageSinister> {
                                         title: RowData(
                                           idData1: 'Id:',
                                           valueData1: list[index].id.toString(),
-                                          idData2: 'Fecha:',
+                                          idData2: localization.dictionary(LabelsText.sinisterDate),
                                           valueData2:
                                               list[index].fechaSiniestro,
                                         ),
