@@ -21,6 +21,6 @@ class Encriptor {
     final bytesPass =   (encrypter.decryptBytes(myEncript.Encrypted.fromBase64(passB64) ,iv: iv));
     final valueStr = utf8.decode(bytesPass);
     return valueStr;
-  }
+  }   
 
 }
