@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
@@ -32,7 +31,6 @@ class BasicBloc extends Bloc<BasicEvent, BasicState> {
     }));
 
     on<AuthFingerPrint>((event, emit) async {
-           final isAutho = await event.authenticate();
            SharedPreferences prefs = await SharedPreferences.getInstance();
           
     });

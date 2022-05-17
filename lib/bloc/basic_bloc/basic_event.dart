@@ -6,25 +6,24 @@ abstract class BasicEvent extends Equatable {
 
 class ButtonPressed extends BasicEvent {
   @override
-  // TODO: implement props
   List<Object?> get props => throw UnimplementedError();
 }
 
 class ToClients extends BasicEvent {
   @override
-  // TODO: implement props
+
   List<Object?> get props => throw UnimplementedError();
 }
 
 class ToSinister extends BasicEvent {
   @override
-  // TODO: implement props
+
   List<Object?> get props => throw UnimplementedError();
 }
 
 class ToInsurance extends BasicEvent {
   @override
-  // TODO: implement props
+
   List<Object?> get props => throw UnimplementedError();
 }
 
@@ -43,7 +42,7 @@ class ShowMensaje extends BasicEvent{
 
 ShowMensaje({required this.mensaje});
   @override
-  // TODO: implement props
+
   List<Object?> get props =>[mensaje];
   
 }
@@ -92,7 +91,7 @@ class AuthFingerPrint extends BasicEvent {
   }
 
   @override
-  // TODO: implement props
+
   List<Object?> get props => throw UnimplementedError();
 
 }

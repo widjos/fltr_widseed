@@ -99,7 +99,9 @@ class _PageSettingsState extends State<PageSettings> {
                         ),
                         
                             Container(
+
                                 child: Switch(
+                                  key: const PageStorageKey('switchTheme'),
                                     value: switchValue,
                                     onChanged: (val) async {
                                       DatabaseReference ref = FirebaseDatabase
