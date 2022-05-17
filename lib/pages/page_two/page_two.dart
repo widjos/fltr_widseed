@@ -36,7 +36,7 @@ class _PageTwoState extends State<PageTwo> {
   Widget build(BuildContext context) {
     final lang = Provider.of<LanguageProvider>(context);
     AppLocalizations localization = AppLocalizations(lang.getLang);
-    FirebaseCrashlytics crashlytics = FirebaseCrashlytics.instance;
+    //FirebaseCrashlytics crashlytics = FirebaseCrashlytics.instance;
 
     return BlocProvider(
       create: (BuildContext context) => BasicBloc(),
