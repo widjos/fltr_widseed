@@ -32,7 +32,7 @@ void main() {
   LanguageProvider langProvider = LanguageProvider();
   langProvider.setLaguaje = Locale('es','ES');
 
-  testWidgets('Open Settings and check Title in spanish', (WidgetTester tester) async {
+  testWidgets('Settings y buscar si existe el texto de Configuraciones', (WidgetTester tester) async {
  
     // Build our app and trigger a frame.
     await tester.pumpWidget( ChangeNotifierProvider.value(
@@ -153,8 +153,7 @@ void main() {
 
      expect(find.byType(Container), findsWidgets); 
      expect(find.byIcon(Icons.abc_outlined), findsWidgets);   //Tap the switch for the theme color
-    //await tester.tap(find.byType(DropdownButton));
-    //await tester.pumpAndSettle();
+
 
 
   });
@@ -176,7 +175,49 @@ void main() {
   });
 
   
+  testWidgets('Open Settings and check Title in spanish', (WidgetTester tester) async {
+ 
+    // Build our app and trigger a frame.
+    await tester.pumpWidget( ChangeNotifierProvider.value(
+      value: langProvider,
+      child: const MaterialApp(
+          locale: Locale('es','ES'),
+          home:  PageSettings()
+          ),  
+        )
+      );
+      await tester.pump();
 
+    
+      expect(find.text('Configuraciones'), findsOneWidget);
+      
+     // tester.any(find.byIcon(Icons.settings));
+      tester.any(find.byType(ButtonIcon));
+     
+
+    // Verify that our counter starts at 0.
+    // 
+    //expect(find.text('Nada'), findsNothing);
+
+    // Tap the 'settings' icon and trigger a next view.
+    //await tester.tap(find.byIcon(Icons.settings));
+    //await tester.pumpWidget(const PageSettings());
+    
+    
+    /*//Tap the switch for the theme color
+    await tester.tap(find.byType(DropdownButton));
+    await tester.pumpAndSettle();
+
+    // Verify that our counter has incremented.
+    final dropdownItem = find.text('English').last;
+    
+    await tester.tap(dropdownItem);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Settings'), findsOneWidget);
+    */
+    
+  });
 
 
 
