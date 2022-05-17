@@ -12,11 +12,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:test/pages/clients/page_clients.dart';
+import 'package:test/pages/insurance/page_insurance.dart';
 
 import 'package:test/pages/page_one/page_one.dart';
 
 import 'package:test/pages/page_settings/page_settings.dart';
 import 'package:test/pages/page_two/page_two.dart';
+import 'package:test/pages/sinister/page_sinister.dart';
 
 import 'package:test/prefs/theme_provider.dart';
 import 'package:test/provider/language_provider.dart';
@@ -190,36 +193,68 @@ void main() {
 
     
       expect(find.text('Configuraciones'), findsOneWidget);
-      
-     // tester.any(find.byIcon(Icons.settings));
       tester.any(find.byType(ButtonIcon));
      
 
-    // Verify that our counter starts at 0.
-    // 
-    //expect(find.text('Nada'), findsNothing);
-
-    // Tap the 'settings' icon and trigger a next view.
-    //await tester.tap(find.byIcon(Icons.settings));
-    //await tester.pumpWidget(const PageSettings());
-    
-    
-    /*//Tap the switch for the theme color
-    await tester.tap(find.byType(DropdownButton));
-    await tester.pumpAndSettle();
-
-    // Verify that our counter has incremented.
-    final dropdownItem = find.text('English').last;
-    
-    await tester.tap(dropdownItem);
-    await tester.pumpAndSettle();
-
-    expect(find.text('Settings'), findsOneWidget);
-    */
     
   });
 
 
+  testWidgets('Clientes show page', (WidgetTester tester) async {
+ 
+    // Build our app and trigger a frame.
+    await tester.pumpWidget( ChangeNotifierProvider.value(
+      value: langProvider,
+      child:  MaterialApp(
+          locale: const Locale('es','ES'),
+          home:  PageClients(theme: false)
+          ),  
+        )
+      );
+      await tester.pump();
+
+    
+      expect(find.text('Clientes'), findsOneWidget);
+    
+     
+
+    
+  });
+  testWidgets('Siniestros show page', (WidgetTester tester) async {
+ 
+    // Build our app and trigger a frame.
+    await tester.pumpWidget( ChangeNotifierProvider.value(
+      value: langProvider,
+      child:  MaterialApp(
+          locale: const Locale('es','ES'),
+          home:  PageSinister()
+          ),  
+        )
+      );
+      await tester.pump();
+
+    
+      expect(find.text('Siniestros'), findsOneWidget);
+
+  });
+
+  testWidgets('Seguros show page', (WidgetTester tester) async {
+ 
+    // Build our app and trigger a frame.
+    await tester.pumpWidget( ChangeNotifierProvider.value(
+      value: langProvider,
+      child:  MaterialApp(
+          locale: const Locale('es','ES'),
+          home:  PageInsurance(theme: false,)
+          ),  
+        )
+      );
+      await tester.pump();
+
+    
+      expect(find.text('Seguros'), findsOneWidget);
+
+  });
 
 
 }
