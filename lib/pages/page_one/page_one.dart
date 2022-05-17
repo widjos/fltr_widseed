@@ -64,7 +64,7 @@ class _PageOneState extends State<PageOne> {
   Widget build(BuildContext context) {
     final lang = Provider.of<LanguageProvider>(context);
     AppLocalizations localization = AppLocalizations(lang.getLang);
-    FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+    //FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
 
     return BlocProvider(
         create: (BuildContext context) => BasicBloc(),
