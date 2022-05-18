@@ -94,7 +94,7 @@ void main() {
       //expect(find.text('Bienvenido'), findsOneWidget);
 
   });
-  testWidgets('Ingresar al Settings desde  la pagina principal',(WidgetTester tester) async {
+  testWidgets('Ingresar  la pagina principal',(WidgetTester tester) async {
 
       await tester.pumpWidget( ChangeNotifierProvider.value(
       value: langProvider,
